@@ -1,2 +1,2 @@
-export * from './Nav';
+export * from './MainNavbar';
 export * from './PrivateRoute';

@@ -1,22 +1,20 @@
 from django.db import models
 from django.utils import timezone
 
-POST_TYPE = (
-    ('Article', 'Article'),
-    ('Event', 'Event')
-)
-
-POST_STATUS = (
-    ('Draft', 'Draft'),
-    ('Private', 'Private'),
-    ('Public', 'Public'),
-    ('Password', 'Password')
-)
-
 
 class Post(models.Model):
-    type = models.CharField(choices=POST_TYPE, default=POST_TYPE[0], max_length=32)
-    status = models.CharField(choices=POST_STATUS, default=POST_STATUS[0], max_length=32)
+    class Status(models.TextChoices):
+        DRAFT = "Draft", "Draft"
+        PRIVATE = "Private", "Private"
+        PUBLIC = "Public", "Public"
+        PASSWORD = "Password", "Password"
+
+    class Type(models.TextChoices):
+        EVENT = "Event", "Event"
+        ARTICLE = "Article", "Article"
+
+    type = models.CharField(choices=Type.choices, default=Type.EVENT, max_length=32)
+    status = models.CharField(choices=Status.choices, default=Status.DRAFT, max_length=32)
     title = models.CharField(max_length=256, default='')
     date = models.DateTimeField(default=timezone.now)
     brand = models.ManyToManyField('backend.Brand')

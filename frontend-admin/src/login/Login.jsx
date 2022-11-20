@@ -1,71 +1,85 @@
-import { useEffect } from 'react';
-import { useForm } from "react-hook-form";
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as Yup from 'yup';
-import { useSelector, useDispatch } from 'react-redux';
+import { useEffect, useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { yupResolver } from '@hookform/resolvers/yup'
+import * as Yup from 'yup'
+import { useSelector, useDispatch } from 'react-redux'
 
-import { history } from '_helpers';
-import { authActions } from '_store';
+import { history } from '_helpers'
+import { authActions } from '_store'
 
-export { Login };
+import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap'
+
+export { Login }
 
 function Login() {
-    const dispatch = useDispatch();
-    const authUser = useSelector(x => x.auth.user);
-    const authError = useSelector(x => x.auth.error);
+  const dispatch = useDispatch()
+  const authUser = useSelector((x) => x.auth.user)
+  const authError = useSelector((x) => x.auth.error)
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+  })
 
-    useEffect(() => {
-        // redirect to home if already logged in
-        if (authUser) history.navigate('/');
+  const updateForm = (event, property) => {
+    event.preventDefault()
+    setFormData((prevState) => ({
+      ...prevState,
+      [property]: event.target.value,
+    }))
+  }
 
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+  const submitForm = () => {
+    let email = formData.email
+    let password = formData.password
+    return dispatch(authActions.login({ email, password }))
+  }
 
-    // form validation rules 
-    const validationSchema = Yup.object().shape({
-        email: Yup.string().required('Email is required'),
-        password: Yup.string().required('Password is required')
-    });
-    const formOptions = { resolver: yupResolver(validationSchema) };
+  useEffect(() => {
+    if (authUser) history.navigate('/')
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
-    // get functions to build form with useForm() hook
-    const { register, handleSubmit, formState } = useForm(formOptions);
-    const { errors, isSubmitting } = formState;
+  return (
+    <Container style={{ height: '100vh' }} className="d-flex">
+      <Row className="my-auto w-100 justify-content-center">
+        <Col xs={12} md={4}>
+          <Card className='w-100'>
+            <Card.Header className="text-center">
+              <h4>Authentication</h4>
+            </Card.Header>
+            <Card.Body>
+              <Form>
+                <Form.Group className="mb-3" controlId="formBasicEmail">
+                  <Form.Label>Email address</Form.Label>
+                  <Form.Control
+                    onChange={(e) => updateForm(e, 'email')}
+                    value={formData.email}
+                    type="email"
+                    placeholder="Enter email"
+                  />
+                </Form.Group>
 
-    function onSubmit({ email, password }) {
-        return dispatch(authActions.login({ email, password }));
-    }
-
-    return (
-        <div className="col-md-6 offset-md-3 mt-5">
-            <div className="alert alert-info">
-                Username: test<br />
-                Password: test
-            </div>
-            <div className="card">
-                <h4 className="card-header">Login</h4>
-                <div className="card-body">
-                    <form onSubmit={handleSubmit(onSubmit)}>
-                        <div className="form-group">
-                            <label>Email</label>
-                            <input name="email" type="text" {...register('email')} className={`form-control ${errors.email ? 'is-invalid' : ''}`} />
-                            <div className="invalid-feedback">{errors.email?.message}</div>
-                        </div>
-                        <div className="form-group">
-                            <label>Password</label>
-                            <input name="password" type="password" {...register('password')} className={`form-control ${errors.password ? 'is-invalid' : ''}`} />
-                            <div className="invalid-feedback">{errors.password?.message}</div>
-                        </div>
-                        <button disabled={isSubmitting} className="btn btn-primary">
-                            {isSubmitting && <span className="spinner-border spinner-border-sm mr-1"></span>}
-                            Login
-                        </button>
-                        {authError &&
-                            <div className="alert alert-danger mt-3 mb-0">{authError.message}</div>
-                        }
-                    </form>
-                </div>
-            </div>
-        </div>
-    )
+                <Form.Group className="mb-3" controlId="formBasicPassword">
+                  <Form.Label>Password</Form.Label>
+                  <Form.Control
+                    onChange={(e) => updateForm(e, 'password')}
+                    value={formData.password}
+                    type="password"
+                    placeholder="Password"
+                  />
+                </Form.Group>
+                <Row>
+                  <Col className="text-center">
+                    <Button onClick={() => submitForm()} variant="primary">
+                      Login
+                    </Button>
+                  </Col>
+                </Row>
+              </Form>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+    </Container>
+  )
 }

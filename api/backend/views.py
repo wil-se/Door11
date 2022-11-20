@@ -17,6 +17,13 @@ class PostView(APIView):
         return Response(serializer.data)
     
     def get(self, request):
-        posts = Post.objects.all()
-        serialized = PostSerializer(posts, many=True)
-        return Response(serialized.data)
+        type = self.request.query_params.get('type', 'event').lower().capitalize()
+        id = self.request.query_params.get('id', None)
+        if not id:
+            posts = Post.objects.filter(type=type)
+            serialized = PostSerializer(posts, many=True)
+            return Response(serialized.data)
+        else:
+            post = Post.objects.get(id=id)
+            serialized = PostSerializer(post)
+            return Response(serialized.data)
