@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { fetchWrapper } from '_helpers'
 import { useParams } from 'react-router-dom'
-import { Row, Col, Form, Button } from 'react-bootstrap'
+import { Row, Col, Form, Button, FormControl } from 'react-bootstrap'
 import { parseDateTime, parseYear } from '_helpers'
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -42,6 +42,7 @@ function Post() {
   const [value, setValue] = useState('');
   
   const [formTitle, setFormTitle] = useState('')
+  const [formStatus, setFormStatus] = useState('')
   const [formType, setFormType] = useState('Event')
   const [formDate, setFormDate] = useState('')
   const [formBrands, setFormBrands] = useState(0)
@@ -58,12 +59,13 @@ function Post() {
     setValue(post.content)
     setFormTitle(post.title)
     setFormType(post.type)
-    setFormBrands(post.brand.map(p => p.id))
-    setFormCollection(post.collection.id)
-    setFormSeason(post.season.id)
-    setFormYear(parseYear(post.year))
-    setFormCity(post.city.id)
-    setFormVenue(post.venue.id)
+    setFormDate(new Date(post.date))
+    setFormBrands(post.brand)
+    setFormCollection(post.collection)
+    setFormSeason(post.season)
+    setFormYear(post.year)
+    setFormCity(post.city)
+    setFormVenue(post.venue)
   }
   const fetchBrands = async () => {
     let brands = await fetchWrapper.get(`${process.env.REACT_APP_API_URL}/backend/brand/`)
@@ -98,16 +100,32 @@ function Post() {
     // eslint-disable-next-line
   }, [])
 
-  const handleSubmit = () => {
-    console.log(formTitle)
-    console.log(formType)
-    console.log(formDate)
-    console.log(formBrands)
-    console.log(formCollection)
-    console.log(formSeason)
-    console.log(formYear)
-    console.log(formCity)
-    console.log(formVenue)
+  const handleSubmit = async () => {
+    console.log('formTitle: '+formTitle)
+    console.log('formType: '+formType)
+    console.log('formDate: '+formDate)
+    console.log('formBrands: '+formBrands)
+    console.log('formCollection: '+formCollection)
+    console.log('formSeason: '+formSeason)
+    console.log('formYear: '+formYear)
+    console.log('formCity: '+formCity)
+    console.log('formVenue: '+formVenue)
+    console.log('value: '+value)
+    let data = {
+      id: id,
+      title: formTitle,
+      type: formType,
+      // status: 'Draft',
+      date: formDate,
+      brand: formBrands,
+      collection: formCollection,
+      season: formSeason,
+      year: parseInt(formYear),
+      city: formCity,
+      venue: formVenue,
+      content: value,
+    }
+    await fetchWrapper.put(`${process.env.REACT_APP_API_URL}/backend/post/?id=${id}`, data)
   }
 
   return (
@@ -115,7 +133,7 @@ function Post() {
       {post && (
         <Form>
           <Row>
-            <Col xs={12}>
+            <Col xs={12} md={9}>
               <Form.Group className="mb-3" controlId="formBasicEmail">
                 <Form.Label>Title</Form.Label>
                 <Form.Control
@@ -136,17 +154,20 @@ function Post() {
               </Form.Group>
             </Col>
             <Col xs={12} md={3}>
-              <Form.Group className="mb-3" controlId="formBasicEmail">
-                <Form.Label>Date</Form.Label>
-                <DatePicker className='form-control' selected={formDate} onChange={(date) => setFormDate(date)} />
+              <Form.Group className="mb-3">
+                <Form.Label htmlFor="disabledSelect">Status</Form.Label>
+                <Form.Select value={formStatus} onChange={e => setFormStatus(e.target.value)} id="disabledSelect">
+                  <option value={'Draft'}>Draft</option>
+                  <option value={'Private'}>Private</option>
+                  <option value={'Public'}>Public</option>
+                  <option value={'Password'}>Password</option>
+                </Form.Select>
               </Form.Group>
             </Col>
             <Col xs={12} md={3}>
-              <Form.Group className="mb-3">
-                <Form.Label htmlFor="disabledSelect">Brand</Form.Label>
-                <Form.Select size='2' multiple value={formBrands} onChange={e => setFormBrands(e.target.selectedOptions)} id="disabledSelect">
-                  {brands.map(b => <option value={b.id} key={b.id}>{b.name}</option>)}
-                </Form.Select>
+              <Form.Group className="mb-3" controlId="formBasicEmail">
+                <Form.Label>Date</Form.Label>
+                <DatePicker className='form-control' selected={formDate} onChange={(date) => setFormDate(date)} />
               </Form.Group>
             </Col>
             <Col xs={12} md={3}>
@@ -171,8 +192,9 @@ function Post() {
                 <Form.Control
                   type="number"
                   placeholder="Enter date"
-                  defaultValue={parseYear(formYear)}
+                  defaultValue={formYear}
                   onChange={e => setFormYear(e.target.value)}
+                  min={1990}
                 />
               </Form.Group>
             </Col>
@@ -192,7 +214,15 @@ function Post() {
                 </Form.Select>
               </Form.Group>
             </Col>
-            <Col>
+            <Col xs={12} md={3}>
+              <Form.Group className="mb-3">
+                <Form.Label htmlFor="disabledSelect">Brands</Form.Label>
+                <Form.Select size='2' multiple defaultValue={formBrands} onChange={e => setFormBrands(Array.from(e.target.selectedOptions).map(v => v.value))} id="disabledSelect">
+                  {brands.map(b => <option value={b.id} key={b.id}>{b.name}</option>)}
+                </Form.Select>
+              </Form.Group>
+            </Col>
+            <Col xs={12}>
               <Form.Group className="mb-3" controlId="formBasicEmail">
                 <Form.Label>Content</Form.Label>
                 <ReactQuill theme="snow" value={value} onChange={setValue} modules={Post.modules} formats={Post.formats}/>

@@ -15,6 +15,16 @@ class PostView(APIView):
         serializer.save()
         return Response(serializer.data)
     
+    def put(self, request):
+        id = self.request.query_params.get('id', None)
+        obj = Post.objects.get(id=id)
+        print(request.data)
+        serializer = PostSerializer(obj, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+    
+    
     def get(self, request):
         type = self.request.query_params.get('type', 'event').lower().capitalize()
         id = self.request.query_params.get('id', None)

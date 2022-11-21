@@ -2,17 +2,6 @@ from rest_framework import serializers
 from .models import Post, Brand, Collection, Season, City, Venue
 
 
-class PostSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Post
-        fields = '__all__'
-        depth = 1
-
-    # def create(self, validated_data):
-    #     post = Post.objects.create(content=validated_data['content'])
-    #     post.save()
-    #     return post
 
 class BrandSerializer(serializers.ModelSerializer):
 
@@ -43,3 +32,21 @@ class VenueSerializer(serializers.ModelSerializer):
     class Meta:
         model = Venue
         fields = '__all__'
+
+
+class PostSerializer(serializers.ModelSerializer):
+    brand = serializers.PrimaryKeyRelatedField(many=True, read_only=False, queryset=Brand.objects.all())
+    collection = serializers.PrimaryKeyRelatedField(queryset=Collection.objects.all())
+    season = serializers.PrimaryKeyRelatedField(queryset=Season.objects.all())
+    city = serializers.PrimaryKeyRelatedField(queryset=City.objects.all())
+    venue = serializers.PrimaryKeyRelatedField(queryset=Venue.objects.all())
+
+    class Meta:
+        model = Post
+        fields = '__all__'
+        depth = 1
+
+    # def create(self, validated_data):
+    #     post = Post.objects.create(content=validated_data['content'])
+    #     post.save()
+    #     return post

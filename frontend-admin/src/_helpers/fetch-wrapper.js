@@ -4,7 +4,7 @@ export const fetchWrapper = {
     get: request('GET'),
     post: request('POST'),
     put: request('PUT'),
-    delete: request('DELETE')
+    delete: request('DELETE'),
 };
 
 function request(method) {
@@ -14,6 +14,7 @@ function request(method) {
             headers: authHeader(url)
         };
         if (body) {
+            console.log(body)
             requestOptions.headers['Content-Type'] = 'application/json';
             requestOptions.body = JSON.stringify(body);
         }

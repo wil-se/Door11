@@ -20,7 +20,7 @@ class Post(models.Model):
     brand = models.ManyToManyField('backend.Brand')
     collection = models.ForeignKey('backend.Collection', null=True, on_delete=models.SET_NULL)
     season = models.ForeignKey('backend.Season', null=True, on_delete=models.SET_NULL)
-    year = models.DateTimeField(default=timezone.now)
+    year = models.IntegerField(default=2000)
     city = models.ForeignKey('backend.City', null=True, on_delete=models.SET_NULL)
     venue = models.ForeignKey('backend.Venue', null=True, on_delete=models.SET_NULL)
     content = models.TextField(default='')
