@@ -19,6 +19,11 @@ function MainNavbar() {
       <Nav className="d-flex justify-content-center">
         <Nav.Link href="/events">Events</Nav.Link>
         <Nav.Link href="/articles">Articles</Nav.Link>
+        <Nav.Link href="/brands">Brands</Nav.Link>
+        <Nav.Link href="/collections">Collections</Nav.Link>
+        <Nav.Link href="/seasons">Seasons</Nav.Link>
+        <Nav.Link href="/cities">Cities</Nav.Link>
+        <Nav.Link href="/venues">Venues</Nav.Link>
         <Nav.Link onClick={logout}>Logout</Nav.Link>
       </Nav>
     </Navbar>
