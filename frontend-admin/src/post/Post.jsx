@@ -231,7 +231,7 @@ function Post() {
             <Row className="text-center">
               <Col>
                 <Button onClick={handleSubmit} variant="primary">
-                  Submit
+                  Update
                 </Button>
               </Col>
             </Row>

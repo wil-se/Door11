@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom'
 export default function PostPreview(props) {
   return (
     <Link to={`/post/${props.post.id}`}>
-      <Card>
+      <Card className='mb-2'>
         <Card.Header className='text-center'>
           <h4>{props.post.title}</h4>
         </Card.Header>

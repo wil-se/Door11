@@ -23,7 +23,7 @@ class Post(models.Model):
     year = models.IntegerField(default=2000)
     city = models.ForeignKey('backend.City', null=True, on_delete=models.SET_NULL)
     venue = models.ForeignKey('backend.Venue', null=True, on_delete=models.SET_NULL)
-    content = models.TextField(default='')
+    content = models.TextField(default='', null=True, blank=True)
 
     def __str__(self):
         return self.title

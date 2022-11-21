@@ -7,7 +7,7 @@ export default function Preview(props) {
     console.log(props)
   return (
     <Link to={`/${props.category}/${props.content.id}`}>
-      <Card>
+      <Card className='mb-2'>
         <Card.Header className='text-center'>
           <h4>{props.content.name}</h4>
         </Card.Header>

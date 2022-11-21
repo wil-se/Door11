@@ -10,13 +10,15 @@ export { City }
 
 function City() {
   let { id } = useParams()
-  const [post, setPost] = useState(undefined)
+  const [city, setCity] = useState(undefined)
   
-  const fetchVenue = async () => {
-    let venue = await fetchWrapper.get(`${process.env.REACT_APP_API_URL}/backend/venue/`)
+  const fetchCity = async () => {
+    let city = await fetchWrapper.get(`${process.env.REACT_APP_API_URL}/backend/city/?id=${id}`)
+    setCity(city)
   }
 
   useEffect(() => {
+    fetchCity()
   }, [])
 
   const handleSubmit = async () => {
@@ -26,11 +28,29 @@ function City() {
 
   return (
     <>
-      {post && (
+    <h2>City</h2>
+      {city && (
         <Form>
           <Row>
-
+          <Col xs={12} md={12}>
+              <Form.Group className="mb-3" controlId="formBasicEmail">
+                <Form.Label>Name</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter title"
+                  defaultValue={city.name}
+                  onChange={(e) => setCity(e.target.value)}
+                />
+              </Form.Group>
+            </Col>
           </Row>
+          <Row className="text-center">
+              <Col>
+                <Button onClick={handleSubmit} variant="primary">
+                  Update
+                </Button>
+              </Col>
+            </Row>
         </Form>
       )}
     </>

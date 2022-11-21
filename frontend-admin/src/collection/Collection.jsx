@@ -10,13 +10,15 @@ export { Collection }
 
 function Collection() {
   let { id } = useParams()
-  const [post, setPost] = useState(undefined)
+  const [collection, setCollection] = useState(undefined)
   
-  const fetchVenue = async () => {
-    let venue = await fetchWrapper.get(`${process.env.REACT_APP_API_URL}/backend/venue/`)
+  const fetchCollection = async () => {
+    let collection = await fetchWrapper.get(`${process.env.REACT_APP_API_URL}/backend/collection/?id=${id}`)
+    setCollection(collection)
   }
 
   useEffect(() => {
+    fetchCollection()
   }, [])
 
   const handleSubmit = async () => {
@@ -26,11 +28,29 @@ function Collection() {
 
   return (
     <>
-      {post && (
+    <h2>Collection</h2>
+      {collection && (
         <Form>
           <Row>
-
+          <Col xs={12} md={12}>
+              <Form.Group className="mb-3" controlId="formBasicEmail">
+                <Form.Label>Name</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter title"
+                  defaultValue={collection.name}
+                  onChange={(e) => setCollection(e.target.value)}
+                />
+              </Form.Group>
+            </Col>
           </Row>
+          <Row className="text-center">
+              <Col>
+                <Button onClick={handleSubmit} variant="primary">
+                  Update
+                </Button>
+              </Col>
+            </Row>
         </Form>
       )}
     </>
