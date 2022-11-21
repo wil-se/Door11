@@ -11,12 +11,14 @@ export { Brand }
 function Brand() {
   let { id } = useParams()
   const [brand, setBrand] = useState(undefined)
+  const [name, setName] = useState(undefined)
 
   const fetchBrand = async () => {
     let brand = await fetchWrapper.get(
       `${process.env.REACT_APP_API_URL}/backend/brand/?id=${id}`,
     )
     setBrand(brand)
+    setName(brand.name)
   }
 
   useEffect(() => {
@@ -24,8 +26,10 @@ function Brand() {
   }, [])
 
   const handleSubmit = async () => {
-    let data = {}
-    // await fetchWrapper.put(`${process.env.REACT_APP_API_URL}/backend/post/?id=${id}`, data)
+    let data = {
+      name: name
+    }
+    await fetchWrapper.put(`${process.env.REACT_APP_API_URL}/backend/brand/?id=${id}`, data)
   }
 
   return (
@@ -40,8 +44,8 @@ function Brand() {
                 <Form.Control
                   type="text"
                   placeholder="Enter title"
-                  defaultValue={brand.name}
-                  onChange={(e) => setBrand(e.target.value)}
+                  defaultValue={name}
+                  onChange={(e) => setName(e.target.value)}
                 />
               </Form.Group>
             </Col>

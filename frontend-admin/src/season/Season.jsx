@@ -11,10 +11,12 @@ export { Season }
 function Season() {
   let { id } = useParams()
   const [season, setSeason] = useState(undefined)
-  
+  const [name, setName] = useState(undefined)
+
   const fetchSeason = async () => {
     let season = await fetchWrapper.get(`${process.env.REACT_APP_API_URL}/backend/season/?id=${id}`)
     setSeason(season)
+    setName(season.name)
   }
 
   useEffect(() => {
@@ -22,8 +24,10 @@ function Season() {
   }, [])
 
   const handleSubmit = async () => {
-    let data = {}
-    // await fetchWrapper.put(`${process.env.REACT_APP_API_URL}/backend/post/?id=${id}`, data)
+    let data = {
+      name: name
+    }
+    await fetchWrapper.put(`${process.env.REACT_APP_API_URL}/backend/season/?id=${id}`, data)
   }
 
   return (
@@ -38,8 +42,8 @@ function Season() {
                 <Form.Control
                   type="text"
                   placeholder="Enter title"
-                  defaultValue={season.name}
-                  onChange={(e) => setSeason(e.target.value)}
+                  defaultValue={name}
+                  onChange={(e) => setName(e.target.value)}
                 />
               </Form.Group>
             </Col>

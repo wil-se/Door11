@@ -10,6 +10,10 @@ export { Venue }
 function Venue() {
   let { id } = useParams()
   const [venue, setVenue] = useState(undefined)
+  const [name, setName]= useState(undefined)
+  const [address, setAddress] = useState(undefined)
+  const [subvenue, setSubVenue] = useState(undefined)
+  const [toBeAnnounced, setToBeAnnounced] = useState(false)
 
   const fetchVenue = async () => {
     let venue = await fetchWrapper.get(
@@ -17,6 +21,11 @@ function Venue() {
     )
     console.log(venue)
     setVenue(venue)
+    setName(venue.name)
+    setAddress(venue.address)
+    setSubVenue(venue.subvenue)
+    setToBeAnnounced(venue.to_be_announced)
+    console.log(toBeAnnounced)
   }
 
   useEffect(() => {
@@ -24,8 +33,13 @@ function Venue() {
   }, [])
 
   const handleSubmit = async () => {
-    let data = {}
-    // await fetchWrapper.put(`${process.env.REACT_APP_API_URL}/backend/post/?id=${id}`, data)
+    let data = {
+      name: name,
+      address: address,
+      subvenue: subvenue,
+      to_be_announced: toBeAnnounced
+    }
+    await fetchWrapper.put(`${process.env.REACT_APP_API_URL}/backend/venue/?id=${id}`, data)
   }
 
   return (
@@ -40,8 +54,8 @@ function Venue() {
                 <Form.Control
                   type="text"
                   placeholder="Enter title"
-                  defaultValue={venue.name}
-                  onChange={(e) => setVenue(e.target.value)}
+                  defaultValue={name}
+                  onChange={(e) => setName(e.target.value)}
                 />
               </Form.Group>
             </Col>
@@ -51,8 +65,8 @@ function Venue() {
                 <Form.Control
                   type="text"
                   placeholder="Enter title"
-                  defaultValue={venue.address}
-                  onChange={(e) => setVenue(e.target.value)}
+                  defaultValue={address}
+                  onChange={(e) => setAddress(e.target.value)}
                 />
               </Form.Group>
             </Col>
@@ -62,8 +76,8 @@ function Venue() {
                 <Form.Control
                   type="text"
                   placeholder="Enter title"
-                  defaultValue={venue.subvenue}
-                  onChange={(e) => setVenue(e.target.value)}
+                  defaultValue={subvenue}
+                  onChange={(e) => setSubVenue(e.target.value)}
                 />
               </Form.Group>
             </Col>
@@ -74,6 +88,8 @@ function Venue() {
                   type={'checkbox'}
                   id={`formBasicEmail`}
                   label={`to be announced`}
+                  defaultChecked={toBeAnnounced}
+                  onChange={e => setToBeAnnounced(e.target.checked)}
                 />
               </Form.Group>
             </Col>

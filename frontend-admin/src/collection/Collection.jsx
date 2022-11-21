@@ -11,10 +11,12 @@ export { Collection }
 function Collection() {
   let { id } = useParams()
   const [collection, setCollection] = useState(undefined)
-  
+  const [name, setName] = useState(undefined)
+
   const fetchCollection = async () => {
     let collection = await fetchWrapper.get(`${process.env.REACT_APP_API_URL}/backend/collection/?id=${id}`)
     setCollection(collection)
+    setName(collection.name)
   }
 
   useEffect(() => {
@@ -22,8 +24,10 @@ function Collection() {
   }, [])
 
   const handleSubmit = async () => {
-    let data = {}
-    // await fetchWrapper.put(`${process.env.REACT_APP_API_URL}/backend/post/?id=${id}`, data)
+    let data = {
+      name: name
+    }
+    await fetchWrapper.put(`${process.env.REACT_APP_API_URL}/backend/collection/?id=${id}`, data)
   }
 
   return (
@@ -38,8 +42,8 @@ function Collection() {
                 <Form.Control
                   type="text"
                   placeholder="Enter title"
-                  defaultValue={collection.name}
-                  onChange={(e) => setCollection(e.target.value)}
+                  defaultValue={name}
+                  onChange={(e) => setName(e.target.value)}
                 />
               </Form.Group>
             </Col>

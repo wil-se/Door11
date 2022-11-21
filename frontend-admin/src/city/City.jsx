@@ -11,10 +11,12 @@ export { City }
 function City() {
   let { id } = useParams()
   const [city, setCity] = useState(undefined)
-  
+  const [name, setName] = useState(undefined)
+
   const fetchCity = async () => {
     let city = await fetchWrapper.get(`${process.env.REACT_APP_API_URL}/backend/city/?id=${id}`)
     setCity(city)
+    setName(city.name)
   }
 
   useEffect(() => {
@@ -22,8 +24,10 @@ function City() {
   }, [])
 
   const handleSubmit = async () => {
-    let data = {}
-    // await fetchWrapper.put(`${process.env.REACT_APP_API_URL}/backend/post/?id=${id}`, data)
+    let data = {
+      name: name
+    }
+    await fetchWrapper.put(`${process.env.REACT_APP_API_URL}/backend/city/?id=${id}`, data)
   }
 
   return (
@@ -38,8 +42,8 @@ function City() {
                 <Form.Control
                   type="text"
                   placeholder="Enter title"
-                  defaultValue={city.name}
-                  onChange={(e) => setCity(e.target.value)}
+                  defaultValue={name}
+                  onChange={(e) => setName(e.target.value)}
                 />
               </Form.Group>
             </Col>

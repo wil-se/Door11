@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom'
 
 
 export default function Preview(props) {
-    console.log(props)
   return (
     <Link to={`/${props.category}/${props.content.id}`}>
       <Card className='mb-2'>

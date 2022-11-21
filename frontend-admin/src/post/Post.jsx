@@ -66,6 +66,7 @@ function Post() {
     setFormYear(post.year)
     setFormCity(post.city)
     setFormVenue(post.venue)
+    setFormStatus(post.status)
   }
   const fetchBrands = async () => {
     let brands = await fetchWrapper.get(`${process.env.REACT_APP_API_URL}/backend/brand/`)
@@ -101,21 +102,11 @@ function Post() {
   }, [])
 
   const handleSubmit = async () => {
-    console.log('formTitle: '+formTitle)
-    console.log('formType: '+formType)
-    console.log('formDate: '+formDate)
-    console.log('formBrands: '+formBrands)
-    console.log('formCollection: '+formCollection)
-    console.log('formSeason: '+formSeason)
-    console.log('formYear: '+formYear)
-    console.log('formCity: '+formCity)
-    console.log('formVenue: '+formVenue)
-    console.log('value: '+value)
     let data = {
       id: id,
       title: formTitle,
       type: formType,
-      // status: 'Draft',
+      status: formStatus,
       date: formDate,
       brand: formBrands,
       collection: formCollection,

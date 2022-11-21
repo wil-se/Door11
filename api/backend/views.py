@@ -24,7 +24,6 @@ class PostView(APIView):
         serializer.save()
         return Response(serializer.data)
     
-    
     def get(self, request):
         type = self.request.query_params.get('type', 'event').lower().capitalize()
         id = self.request.query_params.get('id', None)
@@ -42,6 +41,14 @@ class BrandView(APIView):
 
     def post(self, request):
         serializer = BrandSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+    
+    def put(self, request):
+        id = self.request.query_params.get('id', None)
+        obj = Brand.objects.get(id=id)
+        serializer = BrandSerializer(obj, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
@@ -67,6 +74,14 @@ class CollectionView(APIView):
         serializer.save()
         return Response(serializer.data)
     
+    def put(self, request):
+        id = self.request.query_params.get('id', None)
+        obj = Collection.objects.get(id=id)
+        serializer = CollectionSerializer(obj, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+    
     def get(self, request):
         id = self.request.query_params.get('id', None)
         if not id:
@@ -84,6 +99,14 @@ class SeasonView(APIView):
 
     def post(self, request):
         serializer = SeasonSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+    
+    def put(self, request):
+        id = self.request.query_params.get('id', None)
+        obj = Season.objects.get(id=id)
+        serializer = SeasonSerializer(obj, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
@@ -109,6 +132,14 @@ class CityView(APIView):
         serializer.save()
         return Response(serializer.data)
     
+    def put(self, request):
+        id = self.request.query_params.get('id', None)
+        obj = City.objects.get(id=id)
+        serializer = CitySerializer(obj, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+    
     def get(self, request):
         id = self.request.query_params.get('id', None)
         if not id:
@@ -126,6 +157,15 @@ class VenueView(APIView):
 
     def post(self, request):
         serializer = VenueSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+    
+    def put(self, request):
+        print(request.data)
+        id = self.request.query_params.get('id', None)
+        obj = Venue.objects.get(id=id)
+        serializer = VenueSerializer(obj, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)

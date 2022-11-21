@@ -12,7 +12,6 @@ function Events() {
     const fetchPosts = async () => {
         const baseUrl = `${process.env.REACT_APP_API_URL}`;
         let posts = await fetchWrapper.get(`${baseUrl}/backend/post/?type=event`);
-        console.log(posts)
         setPosts(posts)
     }
 
