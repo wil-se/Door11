@@ -8,7 +8,7 @@ import "react-datepicker/dist/react-datepicker.css";
 
 export { Season }
 
-function Season() {
+function Season(props) {
   let { id } = useParams()
   const [season, setSeason] = useState(undefined)
   const [name, setName] = useState(undefined)
@@ -20,20 +20,26 @@ function Season() {
   }
 
   useEffect(() => {
-    fetchSeason()
+    !props.blank && fetchSeason()
   }, [])
 
   const handleSubmit = async () => {
     let data = {
       name: name
     }
-    await fetchWrapper.put(`${process.env.REACT_APP_API_URL}/backend/season/?id=${id}`, data)
+    props.blank ?
+    await fetchWrapper.post(`${process.env.REACT_APP_API_URL}/backend/season/`, data)
+    : await fetchWrapper.put(`${process.env.REACT_APP_API_URL}/backend/season/?id=${id}`, data)
+  }
+
+  const handleDelete = async () => {
+    await fetchWrapper.delete(`${process.env.REACT_APP_API_URL}/backend/season/?id=${id}`)
   }
 
   return (
     <>
     <h2>Season</h2>
-      {season && (
+      {(
         <Form>
           <Row>
           <Col xs={12} md={12}>
@@ -48,13 +54,16 @@ function Season() {
               </Form.Group>
             </Col>
           </Row>
-          <Row className="text-center">
-              <Col>
-                <Button onClick={handleSubmit} variant="primary">
-                  Update
-                </Button>
-              </Col>
-            </Row>
+          <div className="text-center">
+            <Button className="mx-1" onClick={handleSubmit} variant="primary">
+              {props.blank ? 'Create' : 'Update'}
+            </Button>
+            {!props.blank && (
+              <Button className="mx-1" onClick={handleDelete} variant="primary">
+                Delete
+              </Button>
+            )}
+          </div>
         </Form>
       )}
     </>

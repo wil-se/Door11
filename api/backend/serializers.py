@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Post, Brand, Collection, Season, City, Venue
+from .models import Post, Brand, Collection, Season, City, Country, Venue
 
 
 
@@ -22,23 +22,32 @@ class SeasonSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class CitySerializer(serializers.ModelSerializer):
+    country = serializers.PrimaryKeyRelatedField(queryset=Country.objects.all())
 
     class Meta:
         model = City
         fields = '__all__'
+        depth = 1
+
+class CountrySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Country
+        fields = '__all__'
 
 class VenueSerializer(serializers.ModelSerializer):
+    city = serializers.PrimaryKeyRelatedField(queryset=City.objects.all())
 
     class Meta:
         model = Venue
         fields = '__all__'
+        depth = 1
 
 
 class PostSerializer(serializers.ModelSerializer):
     brand = serializers.PrimaryKeyRelatedField(many=True, read_only=False, queryset=Brand.objects.all())
     collection = serializers.PrimaryKeyRelatedField(queryset=Collection.objects.all())
     season = serializers.PrimaryKeyRelatedField(queryset=Season.objects.all())
-    city = serializers.PrimaryKeyRelatedField(queryset=City.objects.all())
     venue = serializers.PrimaryKeyRelatedField(queryset=Venue.objects.all())
 
     class Meta:

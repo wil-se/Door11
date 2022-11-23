@@ -63,6 +63,14 @@ function App() {
             }
           />
           <Route
+            path="/post/"
+            element={
+              <PrivateRoute>
+                <Post blank={true} />
+              </PrivateRoute>
+            }
+          />
+          <Route
             path="/brands"
             element={
               <PrivateRoute>
@@ -75,6 +83,14 @@ function App() {
             element={
               <PrivateRoute>
                 <Brand />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/brand"
+            element={
+              <PrivateRoute>
+                <Brand blank={true} />
               </PrivateRoute>
             }
           />
@@ -95,6 +111,14 @@ function App() {
             }
           />
           <Route
+            path="/collection"
+            element={
+              <PrivateRoute>
+                <Collection blank={true} />
+              </PrivateRoute>
+            }
+          />
+          <Route
             path="/seasons"
             element={
               <PrivateRoute>
@@ -107,6 +131,14 @@ function App() {
             element={
               <PrivateRoute>
                 <Season />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/season"
+            element={
+              <PrivateRoute>
+                <Season blank={true} />
               </PrivateRoute>
             }
           />
@@ -127,6 +159,14 @@ function App() {
             }
           />
           <Route
+            path="/city"
+            element={
+              <PrivateRoute>
+                <City blank={true} />
+              </PrivateRoute>
+            }
+          />
+          <Route
             path="/venues"
             element={
               <PrivateRoute>
@@ -142,7 +182,14 @@ function App() {
               </PrivateRoute>
             }
           />
-
+          <Route
+            path="/venue"
+            element={
+              <PrivateRoute>
+                <Venue blank={true} />
+              </PrivateRoute>
+            }
+          />
           <Route path="/login" element={<Login />} />
           <Route path="*" element={<Navigate to="/events" />} />
         </Routes>

@@ -8,35 +8,63 @@ import "react-datepicker/dist/react-datepicker.css";
 
 export { City }
 
-function City() {
+function City(props) {
   let { id } = useParams()
   const [city, setCity] = useState(undefined)
   const [name, setName] = useState(undefined)
+  const [region, setRegion] = useState('')
+  const [country, setCountry] = useState(0)
+  const [countries, setCountries] = useState([])
+  const [timezone, setTimezone] = useState('')
+  const [latitude, setLatitude] = useState(0)
+  const [longitude, setLongitude] = useState(0)
 
   const fetchCity = async () => {
     let city = await fetchWrapper.get(`${process.env.REACT_APP_API_URL}/backend/city/?id=${id}`)
     setCity(city)
     setName(city.name)
+    setRegion(city.region)
+    setTimezone(city.timezone)
+    setLatitude(city.latitude)
+    setLongitude(city.longitude)
+    setCountry(city.country)
+  }
+
+  const fetchCountries = async () => {
+    let countries = await fetchWrapper.get(`${process.env.REACT_APP_API_URL}/backend/country/?no_page`)
+    setCountries(countries)
   }
 
   useEffect(() => {
-    fetchCity()
+    !props.blank && fetchCity()
+    fetchCountries()
   }, [])
 
   const handleSubmit = async () => {
     let data = {
-      name: name
+      name: name,
+      region: region,
+      country: parseInt(country),
+      timezone: timezone,
+      latitude: latitude,
+      longitude: longitude,
     }
-    await fetchWrapper.put(`${process.env.REACT_APP_API_URL}/backend/city/?id=${id}`, data)
+    props.blank ?
+    await fetchWrapper.post(`${process.env.REACT_APP_API_URL}/backend/city/`, data)
+    : await fetchWrapper.put(`${process.env.REACT_APP_API_URL}/backend/city/?id=${id}`, data)
+  }
+
+  const handleDelete = async () => {
+    await fetchWrapper.delete(`${process.env.REACT_APP_API_URL}/backend/city/?id=${id}`)
   }
 
   return (
     <>
     <h2>City</h2>
-      {city && (
+      {(
         <Form>
           <Row>
-          <Col xs={12} md={12}>
+          <Col xs={12} md={4}>
               <Form.Group className="mb-3" controlId="formBasicEmail">
                 <Form.Label>Name</Form.Label>
                 <Form.Control
@@ -47,14 +75,69 @@ function City() {
                 />
               </Form.Group>
             </Col>
+            <Col xs={12} md={4}>
+              <Form.Group className="mb-3">
+                <Form.Label htmlFor="disabledSelect">Country</Form.Label>
+                <Form.Select value={country} onChange={e => setCountry(e.target.value)} id="disabledSelect">
+                  {countries.map(c => <option value={c.id} key={c.id}>{c.name}</option>)}
+                </Form.Select>
+              </Form.Group>
+            </Col>
+            <Col xs={12} md={4}>
+              <Form.Group className="mb-3" controlId="formBasicEmail">
+                <Form.Label>Region</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter region"
+                  defaultValue={region}
+                  onChange={(e) => setRegion(e.target.value)}
+                />
+              </Form.Group>
+            </Col>
+            <Col xs={12} md={4}>
+              <Form.Group className="mb-3" controlId="formBasicEmail">
+                <Form.Label>Timezone</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter timezone"
+                  defaultValue={timezone}
+                  onChange={(e) => setTimezone(e.target.value)}
+                />
+              </Form.Group>
+            </Col>
+            <Col xs={12} md={4}>
+              <Form.Group className="mb-3" controlId="formBasicEmail">
+                <Form.Label>Latitude</Form.Label>
+                <Form.Control
+                  type="number"
+                  placeholder="Enter latitude"
+                  value={latitude}
+                  onChange={(e) => setLatitude(e.target.value)}
+                />
+              </Form.Group>
+            </Col>
+            <Col xs={12} md={4}>
+              <Form.Group className="mb-3" controlId="formBasicEmail">
+                <Form.Label>Longitude</Form.Label>
+                <Form.Control
+                  type="number"
+                  placeholder="Enter longitude"
+                  value={longitude}
+                  onChange={(e) => setLongitude(e.target.value)}
+                />
+              </Form.Group>
+            </Col>
           </Row>
-          <Row className="text-center">
-              <Col>
-                <Button onClick={handleSubmit} variant="primary">
-                  Update
-                </Button>
-              </Col>
-            </Row>
+          <div className="text-center">
+            <Button className="mx-1" onClick={handleSubmit} variant="primary">
+              {props.blank ? 'Create' : 'Update'}
+            </Button>
+            {!props.blank && (
+              <Button className="mx-1" onClick={handleDelete} variant="primary">
+                Delete
+              </Button>
+            )}
+          </div>
         </Form>
       )}
     </>

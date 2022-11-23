@@ -8,7 +8,7 @@ import { propTypes } from 'react-bootstrap/esm/Image'
 
 export { Brand }
 
-function Brand() {
+function Brand(props) {
   let { id } = useParams()
   const [brand, setBrand] = useState(undefined)
   const [name, setName] = useState(undefined)
@@ -22,20 +22,34 @@ function Brand() {
   }
 
   useEffect(() => {
-    fetchBrand()
+    !props.blank && fetchBrand()
   }, [])
 
   const handleSubmit = async () => {
     let data = {
-      name: name
+      name: name,
     }
-    await fetchWrapper.put(`${process.env.REACT_APP_API_URL}/backend/brand/?id=${id}`, data)
+    props.blank
+      ? await fetchWrapper.post(
+          `${process.env.REACT_APP_API_URL}/backend/brand/`,
+          data,
+        )
+      : await fetchWrapper.put(
+          `${process.env.REACT_APP_API_URL}/backend/brand/?id=${id}`,
+          data,
+        )
+  }
+
+  const handleDelete = async () => {
+    await fetchWrapper.delete(
+      `${process.env.REACT_APP_API_URL}/backend/brand/?id=${id}`,
+    )
   }
 
   return (
     <>
-    <h2>Brand</h2>
-      { brand && (
+      <h2>Brand</h2>
+      {
         <Form>
           <Row>
             <Col xs={12} md={12}>
@@ -50,15 +64,18 @@ function Brand() {
               </Form.Group>
             </Col>
           </Row>
-          <Row className="text-center">
-              <Col>
-                <Button onClick={handleSubmit} variant="primary">
-                  Update
-                </Button>
-              </Col>
-            </Row>
+          <div className="text-center">
+            <Button className="mx-1" onClick={handleSubmit} variant="primary">
+              {props.blank ? 'Create' : 'Update'}
+            </Button>
+            {!props.blank && (
+              <Button className="mx-1" onClick={handleDelete} variant="primary">
+                Delete
+              </Button>
+            )}
+          </div>
         </Form>
-      )}
+      }
     </>
   )
 }

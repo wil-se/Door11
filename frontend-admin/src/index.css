@@ -12,3 +12,23 @@ a {
 .card-header {
     background-color: white !important;
 }
+
+.page-item.active .page-link {
+    z-index: 3;
+    color: #fff;
+    background-color: black;
+    border-color: black;
+}
+
+.preview:hover {
+    background-color: black !important;
+    color: white;
+}
+
+.navbar-expand .navbar-nav .nav-link {
+    padding: 0px 0px !important;
+}
+
+.multiple-select {
+    height: 220px !important;
+}

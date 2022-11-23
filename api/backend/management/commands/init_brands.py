@@ -1,0 +1,123 @@
+from django.core.management.base import BaseCommand, CommandError
+from geopy import geocoders
+from datetime import datetime
+import pytz
+from backend.models import Brand
+import time
+
+
+brands =[
+"Gucci",
+"Louis Vuitton",
+"Hermès",
+"Prada",
+"Chanel",
+"Burberry",
+"Fendi",
+"Givenchy",
+"Dior",
+"Nina Ricci",
+"Versace",
+"Cartier",
+"Balenciaga",
+"Yves Saint Laurent",
+"Valentino S.p. A.",
+"Chloé",
+"Coach",
+"Zara",
+"Dolce & Gabbana",
+"Rolex",
+"Giorgio Armani S.p. A.",
+"Tiffany & Co.",
+"BVLGARI",
+"Tom Ford",
+"Omega SA",
+"Oscar de la Renta",
+"Hugo Boss",
+"Jimmy Choo",
+"Kenzo S.A.",
+"Moschino",
+"Michael Kors",
+"Kate Spade",
+"MCM",
+"Vera Wang",
+"Tory Burch",
+"DKNY",
+"Zegna",
+"Loewe",
+"Moynat",
+"Berluti",
+"Rimowa",
+"Salvatore Ferragamo S.p.A.",
+"Marc Jacobs",
+"Celine",
+"Emilio Pucci",
+"Victoria’s Secret",
+"Fenty",
+"Paul Stuart",
+"Loro Piana",
+"Nicholas Kirkwood",
+"Calvin Klein",
+"Ray-Ban",
+"Patek Philippe SA",
+"Miu Miu",
+"Swarovski",
+"Longines",
+"Marni",
+"Cesare Attolini",
+"Braccialini",
+"Brioni",
+"Bulgari",
+"Canali",
+"Roberto Cavalli",
+"Corneliani",
+"Brunello Cucinelli",
+"Etro",
+"Extè",
+"Fiorucci",
+"Furla",
+"Genny",
+"Iceberg",
+"Isaia",
+"La Perla",
+"Lardini",
+"Larusmiani",
+"Malo",
+"Fila",
+"Max Mara",
+"Stefano Ricci",
+"Marina Rinaldi",
+"Valextra",
+"Rubinacci",
+"Pinko",
+"Piquadro",
+"Ermanno Scervino",
+"Pal Zileri",
+"André Laug",
+"Borsalino",
+"Luciano Barbera",
+"Italy",
+"Diesel S.p.A.",
+"Alexander McQueen",
+"Paul Smith",
+"Balmain",
+"Jil Sander",
+"Goyard",
+"Lanvin",
+"Rouge",
+"Missoni",
+"Pomellato",
+]
+
+
+class Command(BaseCommand):
+    help = 'Init countries'
+
+    # def add_arguments(self, parser):
+    #     parser.add_argument('number', nargs='+', type=int)
+
+    def handle(self, *args, **options):
+        for brand in brands:
+            b = Brand(name=brand)
+            b.save()
+            print(f'{b} created')

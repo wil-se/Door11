@@ -21,7 +21,6 @@ class Post(models.Model):
     collection = models.ForeignKey('backend.Collection', null=True, on_delete=models.SET_NULL)
     season = models.ForeignKey('backend.Season', null=True, on_delete=models.SET_NULL)
     year = models.IntegerField(default=2000)
-    city = models.ForeignKey('backend.City', null=True, on_delete=models.SET_NULL)
     venue = models.ForeignKey('backend.Venue', null=True, on_delete=models.SET_NULL)
     content = models.TextField(default='', null=True, blank=True)
 
@@ -46,17 +45,29 @@ class Season(models.Model):
     def __str__(self):
         return self.name
 
-class City(models.Model):
-    name = models.CharField(max_length=128, default='')
-
-    def __str__(self):
-        return self.name
-
 class Venue(models.Model):
+    city = models.ForeignKey('backend.City', null=True, on_delete=models.SET_NULL)
     to_be_announced = models.BooleanField(default=True)
     name = models.CharField(max_length=128, default='')
     subvenue = models.CharField(max_length=128, default='')
     address = models.CharField(max_length=128, default='')
+
+    def __str__(self):
+        return self.name
+
+class City(models.Model):
+    name = models.CharField(max_length=128, default='')
+    country = models.ForeignKey('backend.Country', null=True, on_delete=models.SET_NULL)
+    region = models.CharField(max_length=64, default='')
+    timezone = models.CharField(max_length=64, default='Europe/Paris')
+    latitude = models.FloatField(default=-1)
+    longitude = models.FloatField(default=-1)
+
+    def __str__(self):
+        return self.name
+
+class Country(models.Model):
+    name = models.CharField(max_length=128, default='')
 
     def __str__(self):
         return self.name

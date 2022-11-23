@@ -7,29 +7,36 @@ import 'react-datepicker/dist/react-datepicker.css'
 
 export { Venue }
 
-function Venue() {
+function Venue(props) {
   let { id } = useParams()
   const [venue, setVenue] = useState(undefined)
   const [name, setName]= useState(undefined)
   const [address, setAddress] = useState(undefined)
   const [subvenue, setSubVenue] = useState(undefined)
   const [toBeAnnounced, setToBeAnnounced] = useState(false)
+  const [city, setCity] = useState('')
+  const [cities, setCities] = useState([])
 
   const fetchVenue = async () => {
     let venue = await fetchWrapper.get(
       `${process.env.REACT_APP_API_URL}/backend/venue/?id=${id}`,
     )
-    console.log(venue)
     setVenue(venue)
     setName(venue.name)
     setAddress(venue.address)
     setSubVenue(venue.subvenue)
     setToBeAnnounced(venue.to_be_announced)
-    console.log(toBeAnnounced)
+    setCity(venue.city)
+  }
+
+  const fetchCities = async () => {
+    let cities = await fetchWrapper.get(`${process.env.REACT_APP_API_URL}/backend/city/?no_page`)
+    setCities(cities)
   }
 
   useEffect(() => {
-    fetchVenue()
+    !props.blank && fetchVenue()
+    fetchCities()
   }, [])
 
   const handleSubmit = async () => {
@@ -37,17 +44,32 @@ function Venue() {
       name: name,
       address: address,
       subvenue: subvenue,
-      to_be_announced: toBeAnnounced
+      to_be_announced: toBeAnnounced,
+      city: city
     }
-    await fetchWrapper.put(`${process.env.REACT_APP_API_URL}/backend/venue/?id=${id}`, data)
+    props.blank ?
+    await fetchWrapper.post(`${process.env.REACT_APP_API_URL}/backend/venue/`, data)
+    : await fetchWrapper.put(`${process.env.REACT_APP_API_URL}/backend/venue/?id=${id}`, data)
+  }
+
+  const handleDelete = async () => {
+    await fetchWrapper.delete(`${process.env.REACT_APP_API_URL}/backend/venue/?id=${id}`)
   }
 
   return (
     <>
       <h2>Venue</h2>
-      {venue && (
+      {(
         <Form>
           <Row>
+          <Col xs={12} md={3}>
+              <Form.Group className="mb-3">
+                <Form.Label htmlFor="disabledSelect">City</Form.Label>
+                <Form.Select value={city} onChange={e => setCity(e.target.value)} id="disabledSelect">
+                  {cities.map(c => <option value={c.id} key={c.id}>{c.name}</option>)}
+                </Form.Select>
+              </Form.Group>
+            </Col>
             <Col xs={12} md={3}>
               <Form.Group className="mb-3" controlId="formBasicEmail">
                 <Form.Label>Name</Form.Label>
@@ -81,7 +103,7 @@ function Venue() {
                 />
               </Form.Group>
             </Col>
-            <Col xs={12} md={3} className='d-flex justify-content-end'>
+            <Col xs={12} md={3} className=''>
               <Form.Group className="mb-3" controlId="formBasicEmail">
                 {/* <Form.Label>To be announced</Form.Label> */}
                 <Form.Check
@@ -94,13 +116,16 @@ function Venue() {
               </Form.Group>
             </Col>
           </Row>
-          <Row className="text-center">
-              <Col>
-                <Button onClick={handleSubmit} variant="primary">
-                  Update
-                </Button>
-              </Col>
-            </Row>
+          <div className="text-center">
+            <Button className="mx-1" onClick={handleSubmit} variant="primary">
+              {props.blank ? 'Create' : 'Update'}
+            </Button>
+            {!props.blank && (
+              <Button className="mx-1" onClick={handleDelete} variant="primary">
+                Delete
+              </Button>
+            )}
+          </div>
         </Form>
       )}
     </>

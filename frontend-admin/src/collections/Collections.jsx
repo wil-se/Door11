@@ -4,15 +4,20 @@ import { history, fetchWrapper } from '_helpers';
 import PostPreview from '_components/PostPreview';
 import { postActions } from '_store';
 import Preview from '_components/Preview';
+import { Row, Col, Button } from 'react-bootstrap';
+import { Link } from 'react-router-dom'
+import Pages from '_components/Pages'
+
 
 export { Collections };
 
 function Collections() {
     const [posts, setPosts] = useState([])
+    const [currentPage, setCurrentPage] = useState(1)
 
     const fetchPosts = async () => {
         const baseUrl = `${process.env.REACT_APP_API_URL}`;
-        let posts = await fetchWrapper.get(`${baseUrl}/backend/collection/`);
+        let posts = await fetchWrapper.get(`${baseUrl}/backend/collection/?page=${currentPage}`);
         setPosts(posts)
     }
 
@@ -21,14 +26,19 @@ function Collections() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
         fetchPosts();
     // eslint-disable-next-line
-    }, []);
+    }, [currentPage]);
 
     return (
         <div>
             <h2>Collections</h2>
+            <Row>
             {
-                posts.map(post => <Preview key={post.id} content={post} category={'collections'}/>)
+                posts.results && posts.results.map(post => <Col xs={12} md={6} key={post.id}><Preview key={post.id} content={post} category={'collections'}/></Col>)
             }
+            </Row>
+            <div className='d-flex justify-content-center'>
+                <Pages total={posts.total_pages} current={posts.current_page_number} setCurrentPage={setCurrentPage}/>
+            </div>
         </div>
     );
 }
