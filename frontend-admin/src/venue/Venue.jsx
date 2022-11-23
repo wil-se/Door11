@@ -4,11 +4,13 @@ import { useParams } from 'react-router-dom'
 import { Row, Col, Form, Button, FormControl } from 'react-bootstrap'
 import 'react-quill/dist/quill.snow.css'
 import 'react-datepicker/dist/react-datepicker.css'
+import { useNavigate } from 'react-router-dom'
 
 export { Venue }
 
 function Venue(props) {
   let { id } = useParams()
+  let navigate = useNavigate()
   const [venue, setVenue] = useState(undefined)
   const [name, setName]= useState(undefined)
   const [address, setAddress] = useState(undefined)
@@ -48,12 +50,12 @@ function Venue(props) {
       city: city
     }
     props.blank ?
-    await fetchWrapper.post(`${process.env.REACT_APP_API_URL}/backend/venue/`, data)
-    : await fetchWrapper.put(`${process.env.REACT_APP_API_URL}/backend/venue/?id=${id}`, data)
+    await fetchWrapper.post(`${process.env.REACT_APP_API_URL}/backend/venue/`, data) && navigate(-1)
+    : await fetchWrapper.put(`${process.env.REACT_APP_API_URL}/backend/venue/?id=${id}`, data) && navigate(-1)
   }
 
   const handleDelete = async () => {
-    await fetchWrapper.delete(`${process.env.REACT_APP_API_URL}/backend/venue/?id=${id}`)
+    await fetchWrapper.delete(`${process.env.REACT_APP_API_URL}/backend/venue/?id=${id}`) && navigate(-1)
   }
 
   return (

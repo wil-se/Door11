@@ -4,11 +4,13 @@ import { useParams } from 'react-router-dom'
 import { Row, Col, Form, Button, FormControl } from 'react-bootstrap'
 import 'react-quill/dist/quill.snow.css'
 import 'react-datepicker/dist/react-datepicker.css'
+import { useNavigate } from 'react-router-dom'
 
 export { Collection }
 
 function Collection(props) {
   let { id } = useParams()
+  let navigate = useNavigate()
   const [collection, setCollection] = useState(undefined)
   const [name, setName] = useState(undefined)
 
@@ -19,6 +21,7 @@ function Collection(props) {
     setCollection(collection)
     setName(collection.name)
   }
+
 
   useEffect(() => {
     !props.blank && fetchCollection()
@@ -32,15 +35,15 @@ function Collection(props) {
       ? await fetchWrapper.post(
           `${process.env.REACT_APP_API_URL}/backend/collection/`,
           data,
-        )
+        ) && navigate(-1)
       : await fetchWrapper.put(
           `${process.env.REACT_APP_API_URL}/backend/collection/?id=${id}`,
           data,
-        )
+        ) && navigate(-1)
   }
 
   const handleDelete = async () => {
-    await fetchWrapper.delete(`${process.env.REACT_APP_API_URL}/backend/collection/?id=${id}`)
+    await fetchWrapper.delete(`${process.env.REACT_APP_API_URL}/backend/collection/?id=${id}`) && navigate(-1)
   }
 
   return (

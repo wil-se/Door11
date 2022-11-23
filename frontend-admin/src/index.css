@@ -32,3 +32,11 @@ a {
 .multiple-select {
     height: 220px !important;
 }
+
+.navbar-text {
+    color: black !important;
+}
+
+.dropdown-item {
+    padding: 4px 8px !important;
+}

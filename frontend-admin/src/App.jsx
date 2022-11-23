@@ -63,10 +63,18 @@ function App() {
             }
           />
           <Route
-            path="/post/"
+            path="/post/article"
             element={
               <PrivateRoute>
-                <Post blank={true} />
+                <Post blank={true} type={'Article'} />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/post/event"
+            element={
+              <PrivateRoute>
+                <Post blank={true} type={'Event'} />
               </PrivateRoute>
             }
           />

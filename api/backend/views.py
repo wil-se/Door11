@@ -45,8 +45,12 @@ class PostView(APIView, StandardResultsSetPagination):
     def get(self, request):
         type = self.request.query_params.get('type', 'event').lower().capitalize()
         id = self.request.query_params.get('id', None)
+        title = self.request.query_params.get('title', None)
         if not id:
-            objs = self.paginate_queryset(Post.objects.filter(type=type), request)
+            if title:
+                objs = self.paginate_queryset(Post.objects.filter(type=type, title__icontains=title), request)
+            else:
+                objs = self.paginate_queryset(Post.objects.filter(type=type), request)
             serialized = PostSerializer(objs, many=True)
             return self.get_paginated_response(serialized.data)
         else:

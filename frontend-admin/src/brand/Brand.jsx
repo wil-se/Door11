@@ -5,6 +5,7 @@ import { Row, Col, Form, Button, FormControl } from 'react-bootstrap'
 import 'react-quill/dist/quill.snow.css'
 import 'react-datepicker/dist/react-datepicker.css'
 import { propTypes } from 'react-bootstrap/esm/Image'
+import { useNavigate } from 'react-router-dom'
 
 export { Brand }
 
@@ -12,6 +13,7 @@ function Brand(props) {
   let { id } = useParams()
   const [brand, setBrand] = useState(undefined)
   const [name, setName] = useState(undefined)
+  let navigate = useNavigate()
 
   const fetchBrand = async () => {
     let brand = await fetchWrapper.get(
@@ -33,17 +35,17 @@ function Brand(props) {
       ? await fetchWrapper.post(
           `${process.env.REACT_APP_API_URL}/backend/brand/`,
           data,
-        )
+        ) && navigate(-1)
       : await fetchWrapper.put(
           `${process.env.REACT_APP_API_URL}/backend/brand/?id=${id}`,
           data,
-        )
+        ) && navigate(-1)
   }
 
   const handleDelete = async () => {
     await fetchWrapper.delete(
       `${process.env.REACT_APP_API_URL}/backend/brand/?id=${id}`,
-    )
+    ) && navigate(-1)
   }
 
   return (

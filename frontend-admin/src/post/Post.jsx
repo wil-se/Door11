@@ -7,6 +7,7 @@ import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
+import { useNavigate } from 'react-router-dom'
 
 Post.modules = {
   toolbar: [
@@ -45,6 +46,7 @@ export { Post }
 
 function Post(props) {
   let { id } = useParams()
+  let navigate = useNavigate()
   const [post, setPost] = useState(undefined)
   const [brands, setBrands] = useState([])
   const [collections, setCollections] = useState([])
@@ -54,7 +56,7 @@ function Post(props) {
 
   const [formTitle, setFormTitle] = useState('')
   const [formStatus, setFormStatus] = useState('Private')
-  const [formType, setFormType] = useState('Article')
+  const [formType, setFormType] = useState(props.type ? props.type : 'Article')
   const [formDate, setFormDate] = useState(new Date())
   const [formBrands, setFormBrands] = useState([])
   const [formCollection, setFormCollection] = useState('')
@@ -138,17 +140,17 @@ function Post(props) {
       ? await fetchWrapper.post(
           `${process.env.REACT_APP_API_URL}/backend/post/`,
           data,
-        )
+        ) && navigate(-1)
       : await fetchWrapper.put(
           `${process.env.REACT_APP_API_URL}/backend/post/?id=${id}`,
           data,
-        )
+        ) && navigate(-1)
   }
 
   const handleDelete = async () => {
     await fetchWrapper.delete(
       `${process.env.REACT_APP_API_URL}/backend/post/?id=${id}`,
-    )
+    ) && navigate(-1)
   }
 
   return (
@@ -281,24 +283,6 @@ function Post(props) {
                 </Form.Group>
               </Col>
               </Row>
-              <div className="text-center">
-                <Button
-                  className="mx-1"
-                  onClick={handleSubmit}
-                  variant="primary"
-                >
-                  {props.blank ? 'Create' : 'Update'}
-                </Button>
-                {!props.blank && (
-                  <Button
-                    className="mx-1"
-                    onClick={handleDelete}
-                    variant="primary"
-                  >
-                    Delete
-                  </Button>
-                )}
-              </div>
             </Col>
             <Col xs={12} md={2}>
                 <Form.Group className="mb-3">
@@ -323,6 +307,28 @@ function Post(props) {
                     ))}
                   </Form.Select>
                 </Form.Group>
+            </Col>
+          </Row>
+          <Row>
+            <Col xs={12}>
+            <div className="text-center">
+                <Button
+                  className="mx-1"
+                  onClick={handleSubmit}
+                  variant="primary"
+                >
+                  {props.blank ? 'Create' : 'Update'}
+                </Button>
+                {!props.blank && (
+                  <Button
+                    className="mx-1"
+                    onClick={handleDelete}
+                    variant="primary"
+                  >
+                    Delete
+                  </Button>
+                )}
+              </div>
             </Col>
           </Row>
         </Form>
