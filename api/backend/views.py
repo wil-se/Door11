@@ -1,10 +1,13 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
-from .serializers import PostSerializer, BrandSerializer, CollectionSerializer, SeasonSerializer, CitySerializer, CountrySerializer, VenueSerializer
+from .serializers import PostSerializer, BrandSerializer,\
+CollectionSerializer, SeasonSerializer, CitySerializer,\
+CountrySerializer, VenueSerializer, EventSetSerializer
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAuthenticatedOrReadOnly
 from rest_framework import status
-from .models import Post, Brand, Collection, Season, City, Country, Venue
+from .models import Post, Brand, Collection, Season,\
+City, Country, Venue, EventSet
 from rest_framework.pagination import PageNumberPagination
 
 
@@ -28,7 +31,7 @@ class PostView(APIView, StandardResultsSetPagination):
 
     def post(self, request):
         print(request.data)
-        serializer = PostSerializer(data=request.data)
+        serializer = PostSerializer(data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
@@ -339,6 +342,53 @@ class VenueView(APIView, StandardResultsSetPagination):
             return Response(status=status.HTTP_404_NOT_FOUND)
         try:
             obj = Venue.objects.get(id=id)
+            obj.delete()
+            return Response(status=status.HTTP_200_OK)
+        except:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+class EventSetView(APIView, StandardResultsSetPagination):
+    permission_classes = (IsAuthenticatedOrReadOnly,)
+
+    def post(self, request):
+        serializer = EventSetSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+    
+    def put(self, request):
+        print(request.data)
+        id = self.request.query_params.get('id', None)
+        obj = EventSet.objects.get(id=id)
+        serializer = EventSetSerializer(obj, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+    
+    def get(self, request):
+        id = self.request.query_params.get('id', None)
+        paginate = self.request.query_params.get('no_page', None) != ''
+        if not id:
+            if paginate:
+                objs = self.paginate_queryset(EventSet.objects.all(), request)
+                serialized = EventSetSerializer(objs, many=True)
+                return self.get_paginated_response(serialized.data)
+            else:
+                objs = EventSet.objects.all()
+                serialized = EventSetSerializer(objs, many=True)
+                return Response(serialized.data)
+        else:
+            obj = EventSet.objects.get(id=id)
+            serialized = EventSetSerializer(obj)
+            return Response(serialized.data)
+
+    def delete(self, request):
+        id = self.request.query_params.get('id', None)
+        if not id:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        try:
+            obj = EventSet.objects.get(id=id)
             obj.delete()
             return Response(status=status.HTTP_200_OK)
         except:

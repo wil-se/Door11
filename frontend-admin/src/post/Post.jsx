@@ -53,16 +53,20 @@ function Post(props) {
   const [seasons, setSeasons] = useState([])
   const [venue, setVenue] = useState([])
   const [value, setValue] = useState('')
+  const [cities, setCities] = useState([])
+  const [eventSets, setEventSets] = useState([])
 
   const [formTitle, setFormTitle] = useState('')
   const [formStatus, setFormStatus] = useState('Private')
   const [formType, setFormType] = useState(props.type ? props.type : 'Article')
   const [formDate, setFormDate] = useState(new Date())
   const [formBrands, setFormBrands] = useState([])
-  const [formCollection, setFormCollection] = useState('')
-  const [formSeason, setFormSeason] = useState('')
+  const [formCollection, setFormCollection] = useState(-1)
+  const [formSeason, setFormSeason] = useState(-1)
   const [formYear, setFormYear] = useState(new Date().getFullYear())
-  const [formVenue, setFormVenue] = useState('')
+  const [formVenue, setFormVenue] = useState(-1)
+  const [formCity, setFormCity] = useState(-1)
+  const [formEventSet, setFormEventSet] = useState(-1)
 
   const fetchPost = async () => {
     let post
@@ -76,11 +80,13 @@ function Post(props) {
     setFormType(post.type)
     setFormDate(new Date(post.date))
     setFormBrands(post.brand)
-    setFormCollection(post.collection)
-    setFormSeason(post.season)
+    post.collection && setFormCollection(post.collection)
+    post.season && setFormSeason(post.season)
     setFormYear(post.year)
-    setFormVenue(post.venue)
+    post.venue && setFormVenue(post.venue)
     setFormStatus(post.status)
+    post.event_set && setFormEventSet(post.event_set)
+    post.city && setFormCity(post.city)
   }
   const fetchBrands = async () => {
     let brands = await fetchWrapper.get(
@@ -93,21 +99,30 @@ function Post(props) {
       `${process.env.REACT_APP_API_URL}/backend/collection/?no_page`,
     )
     setCollections(collections)
-    setFormCollection(collections[0].id)
   }
   const fetchSeasons = async () => {
     let seasons = await fetchWrapper.get(
       `${process.env.REACT_APP_API_URL}/backend/season/?no_page`,
     )
     setSeasons(seasons)
-    setFormSeason(seasons[0].id)
+  }
+  const fetchCities = async () => {
+    let cities = await fetchWrapper.get(
+      `${process.env.REACT_APP_API_URL}/backend/city/?no_page`,
+    )
+    setCities(cities)
   }
   const fetchVenue = async () => {
     let venue = await fetchWrapper.get(
       `${process.env.REACT_APP_API_URL}/backend/venue/?no_page`,
     )
     setVenue(venue)
-    setFormVenue(venue[0].id)
+  }
+  const fetchEventSets = async () => {
+    let eventSets = await fetchWrapper.get(
+      `${process.env.REACT_APP_API_URL}/backend/eventset/?no_page`,
+    )
+    setEventSets(eventSets)
   }
 
   useEffect(() => {
@@ -118,6 +133,8 @@ function Post(props) {
     fetchCollections()
     fetchSeasons()
     fetchVenue()
+    fetchCities()
+    fetchEventSets()
     // eslint-disable-next-line
   }, [])
 
@@ -129,12 +146,20 @@ function Post(props) {
       status: formStatus,
       date: formDate,
       brand: formBrands,
-      collection: formCollection,
-      season: formSeason,
       year: parseInt(formYear),
-      venue: formVenue,
       content: value,
     }
+    if (formCity >= 0)
+      data.city = formCity
+    if (formCollection >= 0)
+      data.collection = formCollection
+    if (formVenue >= 0)
+      data.venue = formVenue
+    if (formSeason >= 0)
+      data.season = formSeason
+    if (formEventSet >= 0)
+      data.event_set = formEventSet
+    
     console.log(data)
     props.blank
       ? await fetchWrapper.post(
@@ -218,6 +243,7 @@ function Post(props) {
                     onChange={(e) => setFormCollection(e.target.value)}
                     id="disabledSelect"
                   >
+                    <option value={-1}>----</option>
                     {collections.map((c) => (
                       <option value={c.id} key={c.id}>
                         {c.name}
@@ -234,6 +260,7 @@ function Post(props) {
                     onChange={(e) => setFormSeason(e.target.value)}
                     id="disabledSelect"
                   >
+                    <option value={-1}>----</option>
                     {seasons.map((s) => (
                       <option value={s.id} key={s.id}>
                         {s.name}
@@ -247,11 +274,28 @@ function Post(props) {
                   <Form.Label>Year</Form.Label>
                   <Form.Control
                     type="number"
-                    placeholder="Enter date"
+                    placeholder="Enter year"
                     defaultValue={formYear}
                     onChange={(e) => setFormYear(e.target.value)}
                     min={1990}
                   />
+                </Form.Group>
+              </Col>
+              <Col xs={12} md={3}>
+                <Form.Group className="mb-3">
+                  <Form.Label htmlFor="disabledSelect">City</Form.Label>
+                  <Form.Select
+                    value={formCity}
+                    onChange={(e) => setFormCity(e.target.value)}
+                    id="disabledSelect"
+                  >
+                    <option value={-1}>----</option>
+                    {cities.map((c) => (
+                      <option value={c.id} key={c.id}>
+                        {c.name}
+                      </option>
+                    ))}
+                  </Form.Select>
                 </Form.Group>
               </Col>
               <Col xs={12} md={3}>
@@ -262,9 +306,27 @@ function Post(props) {
                     onChange={(e) => setFormVenue(e.target.value)}
                     id="disabledSelect"
                   >
+                    <option value={-1}>----</option>
                     {venue.map((v) => (
                       <option value={v.id} key={v.id}>
                         {v.name}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </Form.Group>
+              </Col>
+              <Col xs={12} md={3}>
+                <Form.Group className="mb-3">
+                  <Form.Label htmlFor="disabledSelect">Event set</Form.Label>
+                  <Form.Select
+                    value={formEventSet}
+                    onChange={(e) => setFormEventSet(e.target.value)}
+                    id="disabledSelect"
+                  >
+                    <option value={-1}>----</option>
+                    {eventSets.map((e) => (
+                      <option value={e.id} key={e.id}>
+                        {e.name}
                       </option>
                     ))}
                   </Form.Select>
@@ -308,6 +370,7 @@ function Post(props) {
                   </Form.Select>
                 </Form.Group>
             </Col>
+
           </Row>
           <Row>
             <Col xs={12}>

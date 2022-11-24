@@ -23,6 +23,8 @@ class Post(models.Model):
     year = models.IntegerField(default=2000)
     venue = models.ForeignKey('backend.Venue', null=True, on_delete=models.SET_NULL)
     content = models.TextField(default='', null=True, blank=True)
+    city = models.ForeignKey('backend.City', null=True, on_delete=models.SET_NULL)
+    event_set = models.ForeignKey('backend.EventSet', null=True, on_delete=models.SET_NULL)
 
     def __str__(self):
         return self.title
@@ -71,3 +73,42 @@ class Country(models.Model):
 
     def __str__(self):
         return self.name
+
+class EventSet(models.Model):
+    name = models.CharField(max_length=128, default='')
+    start_date = models.DateTimeField(default=timezone.now)
+    end_date = models.DateTimeField(default=timezone.now)
+    city = models.ForeignKey('backend.City', null=True, on_delete=models.SET_NULL)
+
+    def __str__(self):
+        return self.name
+
+class Gallery(models.Model):
+    name = models.CharField(max_length=128, default='')
+    images = models.ManyToManyField('backend.Image')
+
+    def __str__(self):
+        return self.name
+
+
+class Image(models.Model):
+    class Camera(models.TextChoices):
+        LOOKS = "Looks", "Looks"
+        CLOSEUPS = "Close-Ups", "Close-Ups"
+        VIBES = "Vibes", "Vibes"
+        BACKSTAGE = "Backstage", "Backstage"
+        FIRSTLOOK = "First Looks", "First Looks"
+        PEOPLE = "People", "Peoples"
+
+    name = models.CharField(max_length=128, default='', blank=True)
+    file = models.FileField(upload_to='images/', null=True)
+    type = models.CharField(choices=Camera.choices, default=Camera.LOOKS, max_length=32)
+
+    def __str__(self):
+        return self.name
+    
+    def save(self, *args, **kwargs):
+        if self.name == '':
+            self.name = self.file.name
+        super(Image, self).save(*args, **kwargs)
+

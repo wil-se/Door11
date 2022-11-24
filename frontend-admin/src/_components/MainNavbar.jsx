@@ -16,7 +16,6 @@ function MainNavbar() {
 
   return (
     <Navbar
-      responsive
       expand="md"
       className="d-flex justify-content-between"
     >
@@ -41,11 +40,17 @@ function MainNavbar() {
               <Link className="dropdown-item" to={'/season'}>
                 Season
               </Link>
+              <Link className="dropdown-item" to={'/country'}>
+                Country
+              </Link>
               <Link className="dropdown-item" to={'/city'}>
                 City
               </Link>
               <Link className="dropdown-item" to={'/venue'}>
                 Venue
+              </Link>
+              <Link className="dropdown-item" to={'/eventset'}>
+                Event set
               </Link>
             </NavDropdown>
             <Link className="mx-md-2" to={'/events'}>
@@ -63,11 +68,17 @@ function MainNavbar() {
             <Link className="mx-md-2" to={'/seasons'}>
             <Navbar.Text>Seasons</Navbar.Text>
             </Link>
+            <Link className="mx-md-2" to={'/countries'}>
+            <Navbar.Text>Countries</Navbar.Text>
+            </Link>
             <Link className="mx-md-2" to={'/cities'}>
             <Navbar.Text>Cities</Navbar.Text>
             </Link>
             <Link className="mx-md-2" to={'/venues'}>
             <Navbar.Text>Venues</Navbar.Text>
+            </Link>
+            <Link className="mx-md-2" to={'/eventsets'}>
+            <Navbar.Text>Event sets</Navbar.Text>
             </Link>
             <Link className="mx-md-2" to={'/'} onClick={logout}>
             <Navbar.Text>Logout</Navbar.Text>

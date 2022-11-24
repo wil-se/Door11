@@ -22,7 +22,10 @@ import { City } from 'city/City'
 import { Collection } from 'collection/Collection'
 import { Season } from 'season'
 import { Venue } from 'venue'
-
+import { Countries } from 'countries/Countries'
+import { Country } from 'country/Country'
+import { Eventsets } from 'eventsets/Eventsets'
+import { Eventset } from 'eventset/Eventset'
 
 import { Container, Row, Col } from 'react-bootstrap'
 
@@ -151,6 +154,30 @@ function App() {
             }
           />
           <Route
+            path="/countries"
+            element={
+              <PrivateRoute>
+                <Countries />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/countries/:id"
+            element={
+              <PrivateRoute>
+                <Country />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/country"
+            element={
+              <PrivateRoute>
+                <Country blank={true} />
+              </PrivateRoute>
+            }
+          />
+          <Route
             path="/cities"
             element={
               <PrivateRoute>
@@ -195,6 +222,30 @@ function App() {
             element={
               <PrivateRoute>
                 <Venue blank={true} />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/eventsets"
+            element={
+              <PrivateRoute>
+                <Eventsets />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/eventsets/:id"
+            element={
+              <PrivateRoute>
+                <Eventset />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/eventset"
+            element={
+              <PrivateRoute>
+                <Eventset blank={true} />
               </PrivateRoute>
             }
           />
