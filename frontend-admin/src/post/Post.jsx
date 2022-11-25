@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react'
 import { fetchWrapper } from '_helpers'
 import { useParams } from 'react-router-dom'
-import { Row, Col, Form, Button, FormControl } from 'react-bootstrap'
+import { Row, Col, Form, Button, FormControl, Tab, Nav } from 'react-bootstrap'
 import { parseDateTime, parseYear } from '_helpers'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import { useNavigate } from 'react-router-dom'
+import Display from '_components/Display'
 
 Post.modules = {
   toolbar: [
@@ -55,6 +56,7 @@ function Post(props) {
   const [value, setValue] = useState('')
   const [cities, setCities] = useState([])
   const [eventSets, setEventSets] = useState([])
+  const [galleries, setGalleries] = useState([])
 
   const [formTitle, setFormTitle] = useState('')
   const [formStatus, setFormStatus] = useState('Private')
@@ -87,6 +89,7 @@ function Post(props) {
     setFormStatus(post.status)
     post.event_set && setFormEventSet(post.event_set)
     post.city && setFormCity(post.city)
+    console.log(post.gallery)
   }
   const fetchBrands = async () => {
     let brands = await fetchWrapper.get(
@@ -124,7 +127,7 @@ function Post(props) {
     )
     setEventSets(eventSets)
   }
-
+  
   useEffect(() => {
     // dispatch(postActions.getAll());
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -149,33 +152,28 @@ function Post(props) {
       year: parseInt(formYear),
       content: value,
     }
-    if (formCity >= 0)
-      data.city = formCity
-    if (formCollection >= 0)
-      data.collection = formCollection
-    if (formVenue >= 0)
-      data.venue = formVenue
-    if (formSeason >= 0)
-      data.season = formSeason
-    if (formEventSet >= 0)
-      data.event_set = formEventSet
-    
+    if (formCity >= 0) data.city = formCity
+    if (formCollection >= 0) data.collection = formCollection
+    if (formVenue >= 0) data.venue = formVenue
+    if (formSeason >= 0) data.season = formSeason
+    if (formEventSet >= 0) data.event_set = formEventSet
+
     console.log(data)
     props.blank
-      ? await fetchWrapper.post(
+      ? (await fetchWrapper.post(
           `${process.env.REACT_APP_API_URL}/backend/post/`,
           data,
-        ) && navigate(-1)
-      : await fetchWrapper.put(
+        )) && navigate(-1)
+      : (await fetchWrapper.put(
           `${process.env.REACT_APP_API_URL}/backend/post/?id=${id}`,
           data,
-        ) && navigate(-1)
+        )) && navigate(-1)
   }
 
   const handleDelete = async () => {
-    await fetchWrapper.delete(
+    ;(await fetchWrapper.delete(
       `${process.env.REACT_APP_API_URL}/backend/post/?id=${id}`,
-    ) && navigate(-1)
+    )) && navigate(-1)
   }
 
   return (
@@ -186,195 +184,244 @@ function Post(props) {
           <Row>
             <Col xs={12} md={10}>
               <Row>
-              <Col xs={12} md={12}>
-                <Form.Group className="mb-3" controlId="formBasicEmail">
-                  <Form.Label>Title</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Enter title"
-                    defaultValue={formTitle}
-                    onChange={(e) => setFormTitle(e.target.value)}
-                  />
-                </Form.Group>
-              </Col>
-              <Col xs={12} md={3}>
-                <Form.Group className="mb-3">
-                  <Form.Label htmlFor="disabledSelect">Type</Form.Label>
-                  <Form.Select
-                    value={formType}
-                    onChange={(e) => setFormType(e.target.value)}
-                    id="disabledSelect"
-                  >
-                    <option value={'Event'}>Event</option>
-                    <option value={'Article'}>Article</option>
-                  </Form.Select>
-                </Form.Group>
-              </Col>
-              <Col xs={12} md={3}>
-                <Form.Group className="mb-3">
-                  <Form.Label htmlFor="disabledSelect">Status</Form.Label>
-                  <Form.Select
-                    value={formStatus}
-                    onChange={(e) => setFormStatus(e.target.value)}
-                    id="disabledSelect"
-                  >
-                    <option value={'Draft'}>Draft</option>
-                    <option value={'Private'}>Private</option>
-                    <option value={'Public'}>Public</option>
-                    <option value={'Password'}>Password</option>
-                  </Form.Select>
-                </Form.Group>
-              </Col>
-              <Col xs={12} md={3}>
-                <Form.Group className="mb-3" controlId="formBasicEmail">
-                  <Form.Label>Date</Form.Label>
-                  <DatePicker
-                    className="form-control"
-                    selected={formDate}
-                    onChange={(date) => setFormDate(date)}
-                  />
-                </Form.Group>
-              </Col>
-              <Col xs={12} md={3}>
-                <Form.Group className="mb-3">
-                  <Form.Label htmlFor="disabledSelect">Collection</Form.Label>
-                  <Form.Select
-                    value={formCollection}
-                    onChange={(e) => setFormCollection(e.target.value)}
-                    id="disabledSelect"
-                  >
-                    <option value={-1}>----</option>
-                    {collections.map((c) => (
-                      <option value={c.id} key={c.id}>
-                        {c.name}
-                      </option>
-                    ))}
-                  </Form.Select>
-                </Form.Group>
-              </Col>
-              <Col xs={12} md={3}>
-                <Form.Group className="mb-3">
-                  <Form.Label htmlFor="disabledSelect">Season</Form.Label>
-                  <Form.Select
-                    value={formSeason}
-                    onChange={(e) => setFormSeason(e.target.value)}
-                    id="disabledSelect"
-                  >
-                    <option value={-1}>----</option>
-                    {seasons.map((s) => (
-                      <option value={s.id} key={s.id}>
-                        {s.name}
-                      </option>
-                    ))}
-                  </Form.Select>
-                </Form.Group>
-              </Col>
-              <Col xs={12} md={3}>
-                <Form.Group className="mb-3" controlId="formBasicEmail">
-                  <Form.Label>Year</Form.Label>
-                  <Form.Control
-                    type="number"
-                    placeholder="Enter year"
-                    defaultValue={formYear}
-                    onChange={(e) => setFormYear(e.target.value)}
-                    min={1990}
-                  />
-                </Form.Group>
-              </Col>
-              <Col xs={12} md={3}>
-                <Form.Group className="mb-3">
-                  <Form.Label htmlFor="disabledSelect">City</Form.Label>
-                  <Form.Select
-                    value={formCity}
-                    onChange={(e) => setFormCity(e.target.value)}
-                    id="disabledSelect"
-                  >
-                    <option value={-1}>----</option>
-                    {cities.map((c) => (
-                      <option value={c.id} key={c.id}>
-                        {c.name}
-                      </option>
-                    ))}
-                  </Form.Select>
-                </Form.Group>
-              </Col>
-              <Col xs={12} md={3}>
-                <Form.Group className="mb-3">
-                  <Form.Label htmlFor="disabledSelect">Venue</Form.Label>
-                  <Form.Select
-                    value={formVenue}
-                    onChange={(e) => setFormVenue(e.target.value)}
-                    id="disabledSelect"
-                  >
-                    <option value={-1}>----</option>
-                    {venue.map((v) => (
-                      <option value={v.id} key={v.id}>
-                        {v.name}
-                      </option>
-                    ))}
-                  </Form.Select>
-                </Form.Group>
-              </Col>
-              <Col xs={12} md={3}>
-                <Form.Group className="mb-3">
-                  <Form.Label htmlFor="disabledSelect">Event set</Form.Label>
-                  <Form.Select
-                    value={formEventSet}
-                    onChange={(e) => setFormEventSet(e.target.value)}
-                    id="disabledSelect"
-                  >
-                    <option value={-1}>----</option>
-                    {eventSets.map((e) => (
-                      <option value={e.id} key={e.id}>
-                        {e.name}
-                      </option>
-                    ))}
-                  </Form.Select>
-                </Form.Group>
-              </Col>
-              <Col xs={12}>
-                <Form.Group className="mb-3" controlId="formBasicEmail">
-                  <Form.Label>Content</Form.Label>
-                  <ReactQuill
-                    theme="snow"
-                    value={value}
-                    onChange={setValue}
-                    modules={Post.modules}
-                    formats={Post.formats}
-                  />
-                </Form.Group>
-              </Col>
+                <Col xs={12} md={12}>
+                  <Form.Group className="mb-3" controlId="formBasicEmail">
+                    <Form.Label>Title</Form.Label>
+                    <Form.Control
+                      type="text"
+                      placeholder="Enter title"
+                      defaultValue={formTitle}
+                      onChange={(e) => setFormTitle(e.target.value)}
+                    />
+                  </Form.Group>
+                </Col>
+                <Col xs={12} md={3}>
+                  <Form.Group className="mb-3">
+                    <Form.Label htmlFor="disabledSelect">Type</Form.Label>
+                    <Form.Select
+                      value={formType}
+                      onChange={(e) => setFormType(e.target.value)}
+                      id="disabledSelect"
+                    >
+                      <option value={'Event'}>Event</option>
+                      <option value={'Article'}>Article</option>
+                    </Form.Select>
+                  </Form.Group>
+                </Col>
+                <Col xs={12} md={3}>
+                  <Form.Group className="mb-3">
+                    <Form.Label htmlFor="disabledSelect">Status</Form.Label>
+                    <Form.Select
+                      value={formStatus}
+                      onChange={(e) => setFormStatus(e.target.value)}
+                      id="disabledSelect"
+                    >
+                      <option value={'Draft'}>Draft</option>
+                      <option value={'Private'}>Private</option>
+                      <option value={'Public'}>Public</option>
+                      <option value={'Password'}>Password</option>
+                    </Form.Select>
+                  </Form.Group>
+                </Col>
+                <Col xs={12} md={3}>
+                  <Form.Group className="mb-3" controlId="formBasicEmail">
+                    <Form.Label>Date</Form.Label>
+                    <DatePicker
+                      className="form-control"
+                      selected={formDate}
+                      onChange={(date) => setFormDate(date)}
+                    />
+                  </Form.Group>
+                </Col>
+                <Col xs={12} md={3}>
+                  <Form.Group className="mb-3">
+                    <Form.Label htmlFor="disabledSelect">Collection</Form.Label>
+                    <Form.Select
+                      value={formCollection}
+                      onChange={(e) => setFormCollection(e.target.value)}
+                      id="disabledSelect"
+                    >
+                      <option value={-1}>----</option>
+                      {collections.map((c) => (
+                        <option value={c.id} key={c.id}>
+                          {c.name}
+                        </option>
+                      ))}
+                    </Form.Select>
+                  </Form.Group>
+                </Col>
+                <Col xs={12} md={3}>
+                  <Form.Group className="mb-3">
+                    <Form.Label htmlFor="disabledSelect">Season</Form.Label>
+                    <Form.Select
+                      value={formSeason}
+                      onChange={(e) => setFormSeason(e.target.value)}
+                      id="disabledSelect"
+                    >
+                      <option value={-1}>----</option>
+                      {seasons.map((s) => (
+                        <option value={s.id} key={s.id}>
+                          {s.name}
+                        </option>
+                      ))}
+                    </Form.Select>
+                  </Form.Group>
+                </Col>
+                <Col xs={12} md={3}>
+                  <Form.Group className="mb-3" controlId="formBasicEmail">
+                    <Form.Label>Year</Form.Label>
+                    <Form.Control
+                      type="number"
+                      placeholder="Enter year"
+                      defaultValue={formYear}
+                      onChange={(e) => setFormYear(e.target.value)}
+                      min={1990}
+                    />
+                  </Form.Group>
+                </Col>
+                <Col xs={12} md={3}>
+                  <Form.Group className="mb-3">
+                    <Form.Label htmlFor="disabledSelect">City</Form.Label>
+                    <Form.Select
+                      value={formCity}
+                      onChange={(e) => setFormCity(e.target.value)}
+                      id="disabledSelect"
+                    >
+                      <option value={-1}>----</option>
+                      {cities.map((c) => (
+                        <option value={c.id} key={c.id}>
+                          {c.name}
+                        </option>
+                      ))}
+                    </Form.Select>
+                  </Form.Group>
+                </Col>
+                <Col xs={12} md={3}>
+                  <Form.Group className="mb-3">
+                    <Form.Label htmlFor="disabledSelect">Venue</Form.Label>
+                    <Form.Select
+                      value={formVenue}
+                      onChange={(e) => setFormVenue(e.target.value)}
+                      id="disabledSelect"
+                    >
+                      <option value={-1}>----</option>
+                      {venue.map((v) => (
+                        <option value={v.id} key={v.id}>
+                          {v.name}
+                        </option>
+                      ))}
+                    </Form.Select>
+                  </Form.Group>
+                </Col>
+                <Col xs={12} md={3}>
+                  <Form.Group className="mb-3">
+                    <Form.Label htmlFor="disabledSelect">Event set</Form.Label>
+                    <Form.Select
+                      value={formEventSet}
+                      onChange={(e) => setFormEventSet(e.target.value)}
+                      id="disabledSelect"
+                    >
+                      <option value={-1}>----</option>
+                      {eventSets.map((e) => (
+                        <option value={e.id} key={e.id}>
+                          {e.name}
+                        </option>
+                      ))}
+                    </Form.Select>
+                  </Form.Group>
+                </Col>
+                <Col xs={12}>
+                  <Form.Group className="mb-3" controlId="formBasicEmail">
+                    <Form.Label>Content</Form.Label>
+                    <ReactQuill
+                      theme="snow"
+                      value={value}
+                      onChange={setValue}
+                      modules={Post.modules}
+                      formats={Post.formats}
+                    />
+                  </Form.Group>
+                </Col>
+                <Col xs={12}>
+                  <label className='form-label'>Galleries</label>
+                  <Tab.Container id="left-tabs-example" defaultActiveKey="looks">
+                    <Row>
+                      <Col sm={3}>
+                        <Nav variant="pills" className="flex-column">
+                          <Nav.Item>
+                            <Nav.Link eventKey="looks">Looks</Nav.Link>
+                          </Nav.Item>
+                          <Nav.Item>
+                            <Nav.Link eventKey="closeups">Close-Ups</Nav.Link>
+                          </Nav.Item>
+                          <Nav.Item>
+                            <Nav.Link eventKey="vibes">Vibes</Nav.Link>
+                          </Nav.Item>
+                          <Nav.Item>
+                            <Nav.Link eventKey="backstage">Backstage</Nav.Link>
+                          </Nav.Item>
+                          <Nav.Item>
+                            <Nav.Link eventKey="firstlooks">First Looks</Nav.Link>
+                          </Nav.Item>
+                          <Nav.Item>
+                            <Nav.Link eventKey="people">People</Nav.Link>
+                          </Nav.Item>
+                        </Nav>
+                      </Col>
+                      <Col sm={9}>
+                        <Tab.Content>
+                          <Tab.Pane eventKey="looks">
+                            <Display />
+                          </Tab.Pane>
+                          <Tab.Pane eventKey="closeups">
+                            CLOSEUPS
+                          </Tab.Pane>
+                          <Tab.Pane eventKey="vibes">
+                            VIBES
+                          </Tab.Pane>
+                          <Tab.Pane eventKey="backstage">
+                            BACKSTAGE
+                          </Tab.Pane>
+                          <Tab.Pane eventKey="firstlooks">
+                            FIRST LOOKS
+                          </Tab.Pane>
+                          <Tab.Pane eventKey="people">
+                            PEOPLE
+                          </Tab.Pane>
+                          
+                        </Tab.Content>
+                      </Col>
+                    </Row>
+                  </Tab.Container>
+                </Col>
               </Row>
             </Col>
             <Col xs={12} md={2}>
-                <Form.Group className="mb-3">
-                  <Form.Label htmlFor="disabledSelect">Brands</Form.Label>
-                  <Form.Select
-                    className='multiple-select'
-                    multiple
-                    value={formBrands}
-                    onChange={(e) =>
-                      setFormBrands(
-                        Array.from(e.target.selectedOptions).map(
-                          (v) => v.value,
-                        ),
-                      )
-                    }
-                    id="disabledSelect"
-                  >
-                    {brands.map((b) => (
-                      <option value={b.id} key={b.id}>
-                        {b.name}
-                      </option>
-                    ))}
-                  </Form.Select>
-                </Form.Group>
+              <Form.Group className="mb-3">
+                <Form.Label htmlFor="disabledSelect">Brands</Form.Label>
+                <Form.Select
+                  className="multiple-select"
+                  multiple
+                  value={formBrands}
+                  onChange={(e) =>
+                    setFormBrands(
+                      Array.from(e.target.selectedOptions).map((v) => v.value),
+                    )
+                  }
+                  id="disabledSelect"
+                >
+                  {brands.map((b) => (
+                    <option value={b.id} key={b.id}>
+                      {b.name}
+                    </option>
+                  ))}
+                </Form.Select>
+              </Form.Group>
             </Col>
-
           </Row>
           <Row>
-            <Col xs={12}>
-            <div className="text-center">
+            <Col xs={12} className='mb-5'>
+              <div className="text-end">
                 <Button
                   className="mx-1"
                   onClick={handleSubmit}

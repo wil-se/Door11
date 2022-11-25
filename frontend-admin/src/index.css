@@ -40,3 +40,8 @@ a {
 .dropdown-item {
     padding: 4px 8px !important;
 }
+
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+    color: white !important;
+    background-color: black !important;
+}

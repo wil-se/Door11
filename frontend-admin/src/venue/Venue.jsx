@@ -118,7 +118,7 @@ function Venue(props) {
               </Form.Group>
             </Col>
           </Row>
-          <div className="text-center">
+          <div className="text-end">
             <Button className="mx-1" onClick={handleSubmit} variant="primary">
               {props.blank ? 'Create' : 'Update'}
             </Button>

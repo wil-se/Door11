@@ -2,12 +2,13 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from .serializers import PostSerializer, BrandSerializer,\
 CollectionSerializer, SeasonSerializer, CitySerializer,\
-CountrySerializer, VenueSerializer, EventSetSerializer
+CountrySerializer, VenueSerializer, EventSetSerializer,\
+GallerySerializer, ImageSerializer
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAuthenticatedOrReadOnly
 from rest_framework import status
 from .models import Post, Brand, Collection, Season,\
-City, Country, Venue, EventSet
+City, Country, Venue, EventSet, Gallery, Image
 from rest_framework.pagination import PageNumberPagination
 
 
@@ -393,3 +394,99 @@ class EventSetView(APIView, StandardResultsSetPagination):
             return Response(status=status.HTTP_200_OK)
         except:
             return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+class GalleryView(APIView, StandardResultsSetPagination):
+    permission_classes = (IsAuthenticatedOrReadOnly,)
+
+    def post(self, request):
+        serializer = GallerySerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+    
+    def put(self, request):
+        print(request.data)
+        id = self.request.query_params.get('id', None)
+        obj = Gallery.objects.get(id=id)
+        serializer = GallerySerializer(obj, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+    
+    def get(self, request):
+        id = self.request.query_params.get('id', None)
+        paginate = self.request.query_params.get('no_page', None) != ''
+        if not id:
+            if paginate:
+                objs = self.paginate_queryset(Gallery.objects.all(), request)
+                serialized = GallerySerializer(objs, many=True)
+                return self.get_paginated_response(serialized.data)
+            else:
+                objs = Gallery.objects.all()
+                serialized = GallerySerializer(objs, many=True)
+                return Response(serialized.data)
+        else:
+            obj = Gallery.objects.get(id=id)
+            serialized = GallerySerializer(obj)
+            return Response(serialized.data)
+
+    def delete(self, request):
+        id = self.request.query_params.get('id', None)
+        if not id:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        try:
+            obj = Gallery.objects.get(id=id)
+            obj.delete()
+            return Response(status=status.HTTP_200_OK)
+        except:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+class ImageView(APIView, StandardResultsSetPagination):
+    permission_classes = (IsAuthenticatedOrReadOnly,)
+
+    def post(self, request):
+        print(request.data)
+        serializer = ImageSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+    
+    def put(self, request):
+        print(request.data)
+        id = self.request.query_params.get('id', None)
+        obj = Image.objects.get(id=id)
+        serializer = ImageSerializer(obj, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+    
+    def get(self, request):
+        id = self.request.query_params.get('id', None)
+        paginate = self.request.query_params.get('no_page', None) != ''
+        if not id:
+            if paginate:
+                objs = self.paginate_queryset(Image.objects.all(), request)
+                serialized = ImageSerializer(objs, many=True)
+                return self.get_paginated_response(serialized.data)
+            else:
+                objs = Image.objects.all()
+                serialized = ImageSerializer(objs, many=True)
+                return Response(serialized.data)
+        else:
+            obj = Image.objects.get(id=id)
+            serialized = ImageSerializer(obj)
+            return Response(serialized.data)
+
+    def delete(self, request):
+        id = self.request.query_params.get('id', None)
+        if not id:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        try:
+            obj = Image.objects.get(id=id)
+            obj.delete()
+            return Response(status=status.HTTP_200_OK)
+        except:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+

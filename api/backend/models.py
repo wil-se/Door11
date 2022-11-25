@@ -25,9 +25,11 @@ class Post(models.Model):
     content = models.TextField(default='', null=True, blank=True)
     city = models.ForeignKey('backend.City', null=True, on_delete=models.SET_NULL)
     event_set = models.ForeignKey('backend.EventSet', null=True, on_delete=models.SET_NULL)
+    gallery = models.ForeignKey('backend.Gallery', null=True, on_delete=models.SET_NULL)
 
     def __str__(self):
         return self.title
+
 
 class Brand(models.Model):
     name = models.CharField(max_length=64, default='')
@@ -35,17 +37,20 @@ class Brand(models.Model):
     def __str__(self):
         return self.name
 
+
 class Collection(models.Model):
     name = models.CharField(max_length=256, default='')
 
     def __str__(self):
         return self.name
 
+
 class Season(models.Model):
     name = models.CharField(max_length=128, default='')
 
     def __str__(self):
         return self.name
+
 
 class Venue(models.Model):
     city = models.ForeignKey('backend.City', null=True, on_delete=models.SET_NULL)
@@ -56,6 +61,7 @@ class Venue(models.Model):
 
     def __str__(self):
         return self.name
+
 
 class City(models.Model):
     name = models.CharField(max_length=128, default='')
@@ -68,11 +74,13 @@ class City(models.Model):
     def __str__(self):
         return self.name
 
+
 class Country(models.Model):
     name = models.CharField(max_length=128, default='')
 
     def __str__(self):
         return self.name
+
 
 class EventSet(models.Model):
     name = models.CharField(max_length=128, default='')
@@ -82,6 +90,7 @@ class EventSet(models.Model):
 
     def __str__(self):
         return self.name
+
 
 class Gallery(models.Model):
     name = models.CharField(max_length=128, default='')
@@ -97,8 +106,8 @@ class Image(models.Model):
         CLOSEUPS = "Close-Ups", "Close-Ups"
         VIBES = "Vibes", "Vibes"
         BACKSTAGE = "Backstage", "Backstage"
-        FIRSTLOOK = "First Looks", "First Looks"
-        PEOPLE = "People", "Peoples"
+        FIRSTLOOKS = "First Looks", "First Looks"
+        PEOPLE = "People", "People"
 
     name = models.CharField(max_length=128, default='', blank=True)
     file = models.FileField(upload_to='images/', null=True)

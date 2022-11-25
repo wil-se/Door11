@@ -1,6 +1,6 @@
 from rest_framework import serializers
-from .models import Post, Brand, Collection, Season, City, Country, Venue, EventSet
-
+from .models import Post, Brand, Collection, Season, City,\
+Country, Venue, EventSet, Gallery, Image
 
 
 class BrandSerializer(serializers.ModelSerializer):
@@ -51,6 +51,23 @@ class EventSetSerializer(serializers.ModelSerializer):
         fields = '__all__'
         depth = 1
 
+
+class GallerySerializer(serializers.ModelSerializer):
+    images = serializers.PrimaryKeyRelatedField(many=True, read_only=False, queryset=Image.objects.all())
+
+    class Meta:
+        model = Gallery
+        fields = '__all__'
+        depth = 1
+
+
+class ImageSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Image
+        fields = '__all__'
+
+
 class PostSerializer(serializers.ModelSerializer):
     brand = serializers.PrimaryKeyRelatedField(many=True, read_only=False, queryset=Brand.objects.all())
     collection = serializers.PrimaryKeyRelatedField(queryset=Collection.objects.all())
@@ -62,7 +79,7 @@ class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = '__all__'
-        depth = 1
+        depth = 2
 
     # def create(self, validated_data):
     #     post = Post.objects.create(content=validated_data['content'])
