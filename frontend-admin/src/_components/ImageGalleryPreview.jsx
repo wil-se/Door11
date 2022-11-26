@@ -26,7 +26,7 @@ export function ImageGalleryPreview(props) {
   return (
     <>
       <Card style={{ height: 250, width: 186 }} className="mb-3 mx-2">
-        <Card.Header>
+        <Card.Header className='text-center'>
           <b>{props.image.image.name.slice(0, 16)}</b>
         </Card.Header>
         <Card.Body className='p-0'>

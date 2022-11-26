@@ -14,19 +14,20 @@ const Display = (props) => {
 
   const handleUpload = async () => {
     var count = 0;
-    orderList.slice(0, orderList.length-1).forEach(o => {
+    orderList.slice(0, orderList.length - 1).forEach(o => {
       const formData = new FormData()
       if (o.id === -1) {
         const url = `${process.env.REACT_APP_API_URL}/backend/image/?gallery=${props.gallery.id}`
         let file;
         toUpload.forEach(f => {
-          if(f.name === o.image.name) {
+          if (f.name === o.image.name) {
             file = f
           }
         })
         formData.append('file', file)
         formData.append('name', file.name)
         formData.append('order', count++)
+        formData.append('type', props.type)
 
         let auth = authHeader(url)
         const config = {
@@ -35,7 +36,7 @@ const Display = (props) => {
             Authorization: auth['Authorization'],
           },
         }
-      axios.post(url, formData, config)
+        axios.post(url, formData, config)
       } else {
         const url = `${process.env.REACT_APP_API_URL}/backend/image/?gallery=${props.gallery.id}&id=${o.image.id}`
         let auth = authHeader(url)
@@ -45,10 +46,10 @@ const Display = (props) => {
             Authorization: auth['Authorization'],
           },
         }
-      axios.put(url, {order: count++}, config)
+        axios.put(url, { order: count++ }, config)
       }
     })
-    
+
   }
 
   useEffect(() => {
@@ -89,39 +90,40 @@ const Display = (props) => {
 
   useEffect(() => {
     if (selectedImages) {
-    setSelectedImages(selectedImages.sort((a, b) => {return a.order - b.order}))
-    let count = 0;
-    let maxID = 0;
-    let sol = []
-    selectedImages.map((i, index) => {
-      if (i.id > maxID)
-        maxID = i.id
-      sol.push({id: i.id, order: count++, image: i, index: index});
-    })
-    let uol = []
-    toUpload.map((i, index) => {
-      uol.push({id: -1, order: count++, image: {id:0, name: i.name, type: 'Looks', file: URL.createObjectURL(i)}, index: index});
-    })
-    setOrderList(sol.concat(uol).concat({id: -2, order: count, index: 0}))
-  }
+      setSelectedImages(selectedImages.sort((a, b) => { return a.order - b.order }))
+      let count = 0;
+      let maxID = 0;
+      let sol = []
+      selectedImages.map((i, index) => {
+        if (i.id > maxID)
+          maxID = i.id
+        sol.push({ id: i.id, order: count++, image: i, index: index });
+      })
+      let uol = []
+      toUpload.map((i, index) => {
+        uol.push({ id: -1, order: count++, image: { id: 0, name: i.name, type: 'Looks', file: URL.createObjectURL(i) }, index: index });
+      })
+      setOrderList(sol.concat(uol).concat({ id: -2, order: count, index: 0 }))
+    }
   }, [selectedImages, toUpload])
-  
-  console.log("ol", orderList)
+
 
   return (
     <>
-        <ListManager
+      <ListManager
         items={orderList}
         direction="horizontal"
         maxItems={window.innerWidth > 600 ? 4 : 1}
         render={item => {
           return item.id !== -2 ?
-        <ImageGalleryPreview key={item.order+item.id} image={item} selectedImages={selectedImages} setSelectedImages={setSelectedImages} toUpload={toUpload} setToUpload={setToUpload} />
-          :  <ImageGalleryUpload setToUpload={setToUpload} toUpload={toUpload} />
-      }}
+            <ImageGalleryPreview key={item.order + item.id} image={item} selectedImages={selectedImages} setSelectedImages={setSelectedImages} toUpload={toUpload} setToUpload={setToUpload} />
+            : <ImageGalleryUpload setToUpload={setToUpload} toUpload={toUpload} />
+        }}
         onDragEnd={reorderList}
       />
-      <Button onClick={handleUpload}>UPLOAD</Button>
+      <Row className="px-3">
+        <Button onClick={handleUpload}>UPDATE GALLERY</Button>
+      </Row>
     </>
   )
 }

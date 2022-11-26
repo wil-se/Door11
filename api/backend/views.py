@@ -453,6 +453,7 @@ class ImageView(APIView, StandardResultsSetPagination):
         names = data['name']
         files = data['file']
         orders = data['order']
+        types = data['type']
         print(names)
         print(files)
         for index in range(len(names)):
@@ -460,6 +461,7 @@ class ImageView(APIView, StandardResultsSetPagination):
             img.name = names[index]
             img.file = files[index]
             img.order = orders[index]
+            img.type = types[index]
             img.save()
             gallery = Gallery.objects.get(id=galleryid)
             gallery.images.add(img)

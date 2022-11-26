@@ -57,6 +57,12 @@ function Post(props) {
   const [cities, setCities] = useState([])
   const [eventSets, setEventSets] = useState([])
   const [gallery, setGallery] = useState({})
+  const [looks, setLooks] = useState({})
+  const [closeUps, setCloseUps] = useState({})
+  const [vibes, setVibes] = useState({})
+  const [backstage, setBackstage] = useState({})
+  const [firstLooks, setFirstLooks] = useState({})
+  const [people, setPeople] = useState({})
 
   const [formTitle, setFormTitle] = useState('')
   const [formStatus, setFormStatus] = useState('Private')
@@ -90,7 +96,33 @@ function Post(props) {
     post.event_set && setFormEventSet(post.event_set)
     post.city && setFormCity(post.city)
     // console.log(post.gallery)
+
+    var tgall = structuredClone(post.gallery)
+    tgall.images = []
+    console.log("tgall", tgall)
+
+    let types = {
+      'Looks': structuredClone(tgall),
+      'Close-Ups': structuredClone(tgall),
+      'Vibes': structuredClone(tgall),
+      'Backstage': structuredClone(tgall),
+      'First Looks': structuredClone(tgall),
+      'People': structuredClone(tgall)
+    }
+
+    post.gallery.images.forEach(i => {
+      types[i.type].images.push(i)
+    })
+
+    setLooks(types['Looks'])
+    setCloseUps(types['Close-Ups'])
+    setVibes(types['Vibes'])
+    setBackstage(types['Backstage'])
+    setFirstLooks(types['First Looks'])
+    setPeople(types['People'])
+
     setGallery(post.gallery)
+
   }
   const fetchBrands = async () => {
     let brands = await fetchWrapper.get(
@@ -128,7 +160,7 @@ function Post(props) {
     )
     setEventSets(eventSets)
   }
-  
+
   useEffect(() => {
     // dispatch(postActions.getAll());
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -162,17 +194,17 @@ function Post(props) {
     console.log(data)
     props.blank
       ? (await fetchWrapper.post(
-          `${process.env.REACT_APP_API_URL}/backend/post/`,
-          data,
-        )) && navigate(-1)
+        `${process.env.REACT_APP_API_URL}/backend/post/`,
+        data,
+      )) && navigate(-1)
       : (await fetchWrapper.put(
-          `${process.env.REACT_APP_API_URL}/backend/post/?id=${id}`,
-          data,
-        )) && navigate(-1)
+        `${process.env.REACT_APP_API_URL}/backend/post/?id=${id}`,
+        data,
+      )) && navigate(-1)
   }
 
   const handleDelete = async () => {
-    ;(await fetchWrapper.delete(
+    ; (await fetchWrapper.delete(
       `${process.env.REACT_APP_API_URL}/backend/post/?id=${id}`,
     )) && navigate(-1)
   }
@@ -372,24 +404,24 @@ function Post(props) {
                       <Col sm={9}>
                         <Tab.Content>
                           <Tab.Pane eventKey="looks">
-                            <Display gallery={gallery} />
+                            <Display gallery={looks} type={'Looks'} />
                           </Tab.Pane>
                           <Tab.Pane eventKey="closeups">
-                            CLOSEUPS
+                            <Display gallery={closeUps} type={'Close-Ups'} />
                           </Tab.Pane>
                           <Tab.Pane eventKey="vibes">
-                            VIBES
+                            <Display gallery={vibes} type={'Vibes'} />
                           </Tab.Pane>
                           <Tab.Pane eventKey="backstage">
-                            BACKSTAGE
+                            <Display gallery={backstage} type={'Backstage'} />
                           </Tab.Pane>
                           <Tab.Pane eventKey="firstlooks">
-                            FIRST LOOKS
+                            <Display gallery={firstLooks} type={'First Looks'} />
                           </Tab.Pane>
                           <Tab.Pane eventKey="people">
-                            PEOPLE
+                            <Display gallery={people} type={'People'} />
                           </Tab.Pane>
-                          
+
                         </Tab.Content>
                       </Col>
                     </Row>
