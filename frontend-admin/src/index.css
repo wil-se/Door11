@@ -62,3 +62,7 @@ a {
 #image-event-label.dragged-over {
   border: 1px solid;
 }
+
+.removebutton {
+    padding: 2px 8px !important;
+}

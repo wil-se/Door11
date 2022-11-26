@@ -25,26 +25,28 @@ export function ImageGalleryPreview(props) {
 
   return (
     <>
-      <Card style={{ height: 250 }} className="mb-3 mx-2">
+      <Card style={{ height: 250, width: 186 }} className="mb-3 mx-2">
         <Card.Header>
-          {props.image.image.name.slice(0, 16)}
+          <b>{props.image.image.name.slice(0, 16)}</b>
         </Card.Header>
         <Card.Body className='p-0'>
           <img
             alt="not found"
-            width={'180px'}
+            width={'100%'}
+            height={'100%'}
             src={url}
             onClick={() => setModalShow(true)}
+            style={{objectFit: 'cover'}}
           />
         </Card.Body>
         <Card.Footer className='text-center'>
-          <Button onClick={handleRemove}>Remove</Button>
+          <Button className='removebutton' onClick={handleRemove}>Remove</Button>
         </Card.Footer>
       </Card>
       <Modal
         show={modalShow}
         onHide={() => setModalShow(false)}
-        size="lg"
+        size="xl"
         aria-labelledby="contained-modal-title-vcenter"
         centered
       >
