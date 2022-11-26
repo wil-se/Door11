@@ -447,20 +447,38 @@ class ImageView(APIView, StandardResultsSetPagination):
     permission_classes = (IsAuthenticatedOrReadOnly,)
 
     def post(self, request):
+        galleryid = self.request.query_params.get('gallery', None)
         print(request.data)
-        serializer = ImageSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data)
+        data = dict(request.data)
+        names = data['name']
+        files = data['file']
+        orders = data['order']
+        print(names)
+        print(files)
+        for index in range(len(names)):
+            img = Image()
+            img.name = names[index]
+            img.file = files[index]
+            img.order = orders[index]
+            img.save()
+            gallery = Gallery.objects.get(id=galleryid)
+            gallery.images.add(img)
+            gallery.save()
+
+        return Response(status.HTTP_200_OK)
     
     def put(self, request):
-        print(request.data)
-        id = self.request.query_params.get('id', None)
-        obj = Image.objects.get(id=id)
-        serializer = ImageSerializer(obj, data=request.data, partial=True)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data)
+        try:
+            print(request.data)
+            id = self.request.query_params.get('id', None)
+            print(id)
+            obj = Image.objects.get(id=id)
+            serializer = ImageSerializer(obj, data=request.data, partial=True)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response(serializer.data)
+        except Exception as e:
+            print(e)
     
     def get(self, request):
         id = self.request.query_params.get('id', None)

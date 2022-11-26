@@ -56,7 +56,7 @@ function Post(props) {
   const [value, setValue] = useState('')
   const [cities, setCities] = useState([])
   const [eventSets, setEventSets] = useState([])
-  const [galleries, setGalleries] = useState([])
+  const [gallery, setGallery] = useState({})
 
   const [formTitle, setFormTitle] = useState('')
   const [formStatus, setFormStatus] = useState('Private')
@@ -89,7 +89,8 @@ function Post(props) {
     setFormStatus(post.status)
     post.event_set && setFormEventSet(post.event_set)
     post.city && setFormCity(post.city)
-    console.log(post.gallery)
+    // console.log(post.gallery)
+    setGallery(post.gallery)
   }
   const fetchBrands = async () => {
     let brands = await fetchWrapper.get(
@@ -371,7 +372,7 @@ function Post(props) {
                       <Col sm={9}>
                         <Tab.Content>
                           <Tab.Pane eventKey="looks">
-                            <Display />
+                            <Display gallery={gallery} />
                           </Tab.Pane>
                           <Tab.Pane eventKey="closeups">
                             CLOSEUPS

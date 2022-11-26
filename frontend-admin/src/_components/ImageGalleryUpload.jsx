@@ -3,17 +3,21 @@ import { Row, Col, Button, Card } from 'react-bootstrap'
 
 
 export function ImageGalleryUpload(props) {
-    return (
+  
+  const handleToUpload = (event) => {
+    var l = props.toUpload
+    Array.from(event.target.files).forEach(f => l.push(f))
+    props.setToUpload([...l])
+  }
+  
+  return (
         <Card style={{height: 250}}>
             UPLOAD
             <input
           type="file"
           name="images"
           multiple="multiple"
-          onChange={(event) => {
-            console.log(event.target.files)
-            props.setSelectedImages(event.target.files)
-          }}
+          onChange={(event) => {handleToUpload(event)}}
         />
         </Card>
     )

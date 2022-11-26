@@ -29,6 +29,13 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
+    
+    def save(self, *args, **kwargs):
+        if not self.gallery:
+            gallery = Gallery()
+            gallery.save()
+            self.gallery = gallery
+        super(Post, self).save(*args, **kwargs)
 
 
 class Brand(models.Model):
@@ -112,6 +119,7 @@ class Image(models.Model):
     name = models.CharField(max_length=128, default='', blank=True)
     file = models.FileField(upload_to='images/', null=True)
     type = models.CharField(choices=Camera.choices, default=Camera.LOOKS, max_length=32)
+    order = models.IntegerField(default=0)
 
     def __str__(self):
         return self.name
