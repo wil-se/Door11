@@ -1,10 +1,13 @@
 import React from 'react'
-import { Row, Col, Button, Card } from 'react-bootstrap'
+import { Row, Col, Button, Card, Modal } from 'react-bootstrap'
 import { fetchWrapper, authHeader } from '_helpers'
+import { useState } from 'react';
 
 
 export function ImageGalleryPreview(props) {
   // console.log("pp", props)
+  const [modalShow, setModalShow] = useState(false);
+
   const handleRemove = async () => {
     if (props.image.image.id) {
       let l = Array.from(props.selectedImages)
@@ -19,19 +22,50 @@ export function ImageGalleryPreview(props) {
     }
   }
   const url = props.image.image.file ? props.image.image.file : URL.createObjectURL(props.image.image)
-  
+
   return (
-    <Card style={{ height: 250 }} className="mb-4 mx-2">
-      <Card.Body>
-      <img
-        alt="not found"
-        width={'150px'}
-        src={url}
-      />
-      </Card.Body>
-      <Card.Footer className='text-center'>
+    <>
+      <Card style={{ height: 250 }} className="mb-3 mx-2">
+        <Card.Header>
+          {props.image.image.name.slice(0, 16)}
+        </Card.Header>
+        <Card.Body className='p-0'>
+          <img
+            alt="not found"
+            width={'180px'}
+            src={url}
+            onClick={() => setModalShow(true)}
+          />
+        </Card.Body>
+        <Card.Footer className='text-center'>
           <Button onClick={handleRemove}>Remove</Button>
-      </Card.Footer>
-    </Card>
+        </Card.Footer>
+      </Card>
+      <Modal
+        show={modalShow}
+        onHide={() => setModalShow(false)}
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+      >
+
+        <Modal.Header closeButton>
+          {/* <Modal.Title id="contained-modal-title-vcenter">
+            Preview
+          </Modal.Title> */}
+        </Modal.Header>
+        <Modal.Body>
+          <img
+            alt="not found"
+            width={'100%'}
+            src={url}
+            onClick={() => setModalShow(true)}
+          />
+        </Modal.Body>
+        {/* <Modal.Footer>
+          <Button onClick={props.onHide}>Close</Button>
+        </Modal.Footer> */}
+      </Modal>
+    </>
   )
 }
