@@ -14,6 +14,41 @@ const Display = (props) => {
   const [showNotify, setShowNotify] = useState(false);
   const toggleShowNotify = () => setShowNotify(!showNotify);
 
+  const handleSortAZ = () => {
+    let l = orderList
+    l = l.slice(0, l.length - 1).sort((a, b) => { return a.name.localeCompare(b.name) })
+    l.forEach((e, index) => e.order = index)
+    l = l.concat({ id: -2, order: l.length, index: 0 })
+    console.log("L", l)
+    setOrderList(l)
+  }
+
+  const handleSortZA = () => {
+    let l = orderList
+    l = l.slice(0, l.length - 1).sort((a, b) => { return b.name.localeCompare(a.name) })
+    l.forEach((e, index) => e.order = index)
+    l = l.concat({ id: -2, order: l.length, index: 0 })
+    console.log("L", l)
+    setOrderList(l)
+  }
+
+  const handleSortTimeAscending = () => {
+    let l = orderList
+    l = l.slice(0, l.length - 1).sort((a, b) => { console.log(a.last_modified_date); return new Date(a.last_modified_date).getTime() - new Date(b.last_modified_date).getTime() })
+    l.forEach((e, index) => e.order = index)
+    l = l.concat({ id: -2, order: l.length, index: 0 })
+    console.log("L", l)
+    setOrderList(l)
+  }
+
+  const handleSortTimeDescending = () => {
+    let l = orderList
+    l = l.slice(0, l.length - 1).sort((a, b) => { return new Date(b.last_modified_date).getTime() - new Date(a.last_modified_date).getTime() })
+    l.forEach((e, index) => e.order = index)
+    l = l.concat({ id: -2, order: l.length, index: 0 })
+    console.log("L", l)
+    setOrderList(l)
+  }
 
   const handleUpload = async () => {
     toggleShowNotify()
@@ -85,12 +120,19 @@ const Display = (props) => {
   }
 
   function sortList(list) {
-    return list.slice().sort((first, second) => {
+    console.log("sorting..")
+    let l = list.slice().sort((first, second) => {
       if (second.id === -2)
         return -1
+      if (first.id === -2)
+        return 1
       return first.order - second.order
     });
+    console.log("sorting", l)
+    return l;
   }
+
+  console.log("orderList", orderList)
 
   useEffect(() => {
     if (selectedImages) {
@@ -101,13 +143,16 @@ const Display = (props) => {
       selectedImages.map((i, index) => {
         if (i.id > maxID)
           maxID = i.id
-        sol.push({ id: i.id, order: count++, image: i, index: index });
+        sol.push({ last_modified_date: i.last_modified_date, id: i.id, order: count++, image: i, index: index, name: i.name });
       })
       let uol = []
       toUpload.map((i, index) => {
-        uol.push({ id: -1, order: count++, image: { id: 0, name: i.name, type: 'Looks', file: URL.createObjectURL(i) }, index: index });
+        console.log(i)
+        uol.push({ last_modified_date: i.lastModifiedDate, id: -1, order: count++, name: i.name, image: { id: 0, name: i.name, type: 'Looks', file: URL.createObjectURL(i) }, index: index });
       })
-      setOrderList(sol.concat(uol).concat({ id: -2, order: count, index: 0 }))
+      let final = sol.concat(uol).concat({ id: -2, order: count, index: 0 })
+      console.log("final", final)
+      setOrderList(final)
     }
   }, [selectedImages, toUpload])
 
@@ -124,21 +169,25 @@ const Display = (props) => {
         }}
         onDragEnd={reorderList}
       />
-      <Row className="px-3">
-        <Button onClick={handleUpload}>UPDATE GALLERY</Button>
-      </Row>
+      <div className="px-2">
+        <Button className="me-1" onClick={handleUpload}>UPDATE {props.type.toUpperCase()}</Button>
+        <Button className="mx-1" onClick={handleSortAZ}>Sort A-Z</Button>
+        <Button className="mx-1" onClick={handleSortZA}>Sort Z-A</Button>
+        <Button className="mx-1" onClick={handleSortTimeAscending}>Sort Time Ascending</Button>
+        <Button className="mx-1" onClick={handleSortTimeDescending}>Sort Time Descending</Button>
+      </div>
 
-      <Toast style={{position: 'fixed', top: 60, right: 60}} show={showNotify} onClose={toggleShowNotify}>
-          <Toast.Header>
-            <img
-              src="holder.js/20x20?text=%20"
-              className="rounded me-2"
-              alt=""
-            />
-            <strong className="me-auto">Loading</strong>
-          </Toast.Header>
-          <Toast.Body>Updating gallery, please wait</Toast.Body>
-        </Toast>
+      <Toast style={{ position: 'fixed', top: 60, right: 60 }} show={showNotify} onClose={toggleShowNotify}>
+        <Toast.Header>
+          <img
+            src="holder.js/20x20?text=%20"
+            className="rounded me-2"
+            alt=""
+          />
+          <strong className="me-auto">Loading</strong>
+        </Toast.Header>
+        <Toast.Body>Updating gallery, please wait</Toast.Body>
+      </Toast>
     </>
   )
 }

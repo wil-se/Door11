@@ -28,7 +28,7 @@ export function ImageGalleryPreview(props) {
   ++number
   return (
     <>
-      <Card style={{ height: 400, width: 200 }} className="mb-3 mx-2">
+      <Card style={{ height: 330, width: 200 }} className="mb-3 mx-2">
         <Card.Header className='text-center'>
           <div className='text-center'>
             <b>{number}</b>

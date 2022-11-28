@@ -121,6 +121,7 @@ class Image(models.Model):
     file = models.FileField(upload_to='images/', null=True)
     type = models.CharField(choices=Camera.choices, default=Camera.LOOKS, max_length=32)
     order = models.IntegerField(default=0)
+    last_modified_date = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return self.name
