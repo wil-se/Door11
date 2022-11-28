@@ -1,11 +1,7 @@
 import { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { history, fetchWrapper } from '_helpers';
-import PostPreview from '_components/PostPreview';
-import { postActions } from '_store';
+import { fetchWrapper } from '_helpers';
 import Preview from '_components/Preview';
-import { Row, Col, Button } from 'react-bootstrap';
-import { Link } from 'react-router-dom'
+import { Row, Col } from 'react-bootstrap';
 import Pages from '_components/Pages'
 
 

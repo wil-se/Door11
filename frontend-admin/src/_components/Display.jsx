@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { Button, Row, Col, Toast } from 'react-bootstrap'
-import { fetchWrapper, authHeader } from '_helpers'
+import { Button, Toast } from 'react-bootstrap'
+import { authHeader } from '_helpers'
 import axios from 'axios'
 import { ImageGalleryUpload } from './ImageGalleryUpload'
 import { ImageGalleryPreview } from './ImageGalleryPreview'
@@ -140,14 +140,13 @@ const Display = (props) => {
       let count = 0;
       let maxID = 0;
       let sol = []
-      selectedImages.map((i, index) => {
+      selectedImages.forEach((i, index) => {
         if (i.id > maxID)
           maxID = i.id
         sol.push({ last_modified_date: i.last_modified_date, id: i.id, order: count++, image: i, index: index, name: i.name });
       })
       let uol = []
-      toUpload.map((i, index) => {
-        console.log(i)
+      toUpload.forEach((i, index) => {
         uol.push({ last_modified_date: i.lastModifiedDate, id: -1, order: count++, name: i.name, image: { id: 0, name: i.name, type: 'Looks', file: URL.createObjectURL(i) }, index: index });
       })
       let final = sol.concat(uol).concat({ id: -2, order: count, index: 0 })

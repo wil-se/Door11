@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { fetchWrapper } from '_helpers'
 import { useParams } from 'react-router-dom'
-import { Row, Col, Form, Button, FormControl } from 'react-bootstrap'
+import { Row, Col, Form, Button } from 'react-bootstrap'
 import 'react-quill/dist/quill.snow.css';
 import "react-datepicker/dist/react-datepicker.css";
 import { useNavigate } from 'react-router-dom'
@@ -12,7 +12,6 @@ export { City }
 function City(props) {
   let { id } = useParams()
   let navigate = useNavigate()
-  const [city, setCity] = useState(undefined)
   const [name, setName] = useState(undefined)
   const [region, setRegion] = useState('')
   const [country, setCountry] = useState(0)
@@ -23,7 +22,6 @@ function City(props) {
 
   const fetchCity = async () => {
     let city = await fetchWrapper.get(`${process.env.REACT_APP_API_URL}/backend/city/?id=${id}`)
-    setCity(city)
     setName(city.name)
     setRegion(city.region)
     setTimezone(city.timezone)
@@ -40,7 +38,7 @@ function City(props) {
   useEffect(() => {
     !props.blank && fetchCity()
     fetchCountries()
-  }, [])
+  })
 
   const handleSubmit = async () => {
     let data = {

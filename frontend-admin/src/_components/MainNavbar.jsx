@@ -1,7 +1,6 @@
-import { NavLink } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { authActions } from '_store'
-import { Nav, Navbar, Container, NavDropdown, Row } from 'react-bootstrap'
+import { Nav, Navbar, NavDropdown } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 
 export { MainNavbar }

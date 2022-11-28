@@ -1,5 +1,5 @@
 import React from "react";
-import { Row, Col, Button, Card } from 'react-bootstrap'
+import { Card } from 'react-bootstrap'
 
 
 export function ImageGalleryUpload(props) {

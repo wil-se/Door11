@@ -27,7 +27,7 @@ import { Country } from 'country/Country'
 import { Eventsets } from 'eventsets/Eventsets'
 import { Eventset } from 'eventset/Eventset'
 
-import { Container, Row, Col } from 'react-bootstrap'
+import { Container } from 'react-bootstrap'
 
 export { App }
 

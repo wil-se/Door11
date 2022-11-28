@@ -1,8 +1,7 @@
 import React from 'react'
-import { Row, Col, Button, Card, Modal } from 'react-bootstrap'
-import { fetchWrapper, authHeader } from '_helpers'
+import { Button, Card, Modal } from 'react-bootstrap'
+import { fetchWrapper } from '_helpers'
 import { useState } from 'react';
-import Dropdown from 'react-bootstrap/Dropdown';
 
 
 export function ImageGalleryPreview(props) {

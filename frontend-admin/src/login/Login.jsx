@@ -1,7 +1,4 @@
 import { useEffect, useState } from 'react'
-import { useForm } from 'react-hook-form'
-import { yupResolver } from '@hookform/resolvers/yup'
-import * as Yup from 'yup'
 import { useSelector, useDispatch } from 'react-redux'
 
 import { history } from '_helpers'
@@ -14,7 +11,6 @@ export { Login }
 function Login() {
   const dispatch = useDispatch()
   const authUser = useSelector((x) => x.auth.user)
-  const authError = useSelector((x) => x.auth.error)
   const [formData, setFormData] = useState({
     email: '',
     password: '',

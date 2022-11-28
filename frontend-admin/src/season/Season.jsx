@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { fetchWrapper } from '_helpers'
 import { useParams } from 'react-router-dom'
-import { Row, Col, Form, Button, FormControl } from 'react-bootstrap'
+import { Row, Col, Form, Button } from 'react-bootstrap'
 import 'react-quill/dist/quill.snow.css';
 import "react-datepicker/dist/react-datepicker.css";
 import { useNavigate } from 'react-router-dom'
@@ -11,19 +11,17 @@ export { Season }
 
 function Season(props) {
   let { id } = useParams()
-  const [season, setSeason] = useState(undefined)
   const [name, setName] = useState(undefined)
   let navigate = useNavigate()
 
   const fetchSeason = async () => {
     let season = await fetchWrapper.get(`${process.env.REACT_APP_API_URL}/backend/season/?id=${id}`)
-    setSeason(season)
     setName(season.name)
   }
 
   useEffect(() => {
     !props.blank && fetchSeason()
-  }, [])
+  })
 
   const handleSubmit = async () => {
     let data = {

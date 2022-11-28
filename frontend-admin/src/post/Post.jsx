@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react'
 import { fetchWrapper } from '_helpers'
 import { useParams } from 'react-router-dom'
-import { Row, Col, Form, Button, FormControl, Tab, Nav } from 'react-bootstrap'
-import { parseDateTime, parseYear } from '_helpers'
+import { Row, Col, Form, Button, Tab, Nav } from 'react-bootstrap'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import DatePicker from 'react-datepicker'
@@ -48,7 +47,6 @@ export { Post }
 function Post(props) {
   let { id } = useParams()
   let navigate = useNavigate()
-  const [post, setPost] = useState(undefined)
   const [brands, setBrands] = useState([])
   const [collections, setCollections] = useState([])
   const [seasons, setSeasons] = useState([])
@@ -56,7 +54,6 @@ function Post(props) {
   const [value, setValue] = useState('')
   const [cities, setCities] = useState([])
   const [eventSets, setEventSets] = useState([])
-  const [gallery, setGallery] = useState({})
   const [looks, setLooks] = useState({})
   const [closeUps, setCloseUps] = useState({})
   const [vibes, setVibes] = useState({})
@@ -77,14 +74,11 @@ function Post(props) {
   const [formEventSet, setFormEventSet] = useState(-1)
   const [formToBeAnnounced, setFormToBeAnnounced] = useState(false)
 
-  const [brandNames, setBrandNames] = useState([])
-
   const fetchPost = async () => {
     let post
     post = await fetchWrapper.get(
       `${process.env.REACT_APP_API_URL}/backend/post/?id=${id}`,
     )
-    setPost(post)
     setValue(post.content)
     setFormTitle(post.title)
     setFormType(post.type)
@@ -122,8 +116,6 @@ function Post(props) {
     setBackstage(types['Backstage'])
     setFirstLooks(types['First Looks'])
     setPeople(types['People'])
-
-    setGallery(post.gallery)
 
   }
   const fetchBrands = async () => {

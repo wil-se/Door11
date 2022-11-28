@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { fetchWrapper } from '_helpers'
 import { useParams } from 'react-router-dom'
-import { Row, Col, Form, Button, FormControl } from 'react-bootstrap'
+import { Row, Col, Form, Button } from 'react-bootstrap'
 import 'react-quill/dist/quill.snow.css';
 import "react-datepicker/dist/react-datepicker.css";
 import { useNavigate } from 'react-router-dom'
@@ -13,7 +13,6 @@ export { Eventset }
 
 function Eventset(props) {
   let { id } = useParams()
-  const [eventSet, setEventSet] = useState(undefined)
   const [name, setName] = useState(undefined)
   const [cities, setCities] = useState([])
   const [city, setCity] = useState(-1)
@@ -26,7 +25,6 @@ function Eventset(props) {
   const fetchEventSet = async () => {
     let eventSet = await fetchWrapper.get(`${process.env.REACT_APP_API_URL}/backend/eventset/?id=${id}`)
     console.log(eventSet)
-    setEventSet(eventSet)
     setName(eventSet.name)
     setCity(eventSet.city)
     setStartDate(new Date(eventSet.start_date))
@@ -43,7 +41,7 @@ function Eventset(props) {
   useEffect(() => {
     !props.blank && fetchEventSet()
     fetchCities()
-  }, [])
+  })
 
   const handleSubmit = async () => {
     let data = {
