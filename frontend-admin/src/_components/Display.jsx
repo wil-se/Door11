@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Button, Row, Col } from 'react-bootstrap'
+import { Button, Row, Col, Toast } from 'react-bootstrap'
 import { fetchWrapper, authHeader } from '_helpers'
 import axios from 'axios'
 import { ImageGalleryUpload } from './ImageGalleryUpload'
@@ -11,8 +11,12 @@ const Display = (props) => {
   const [selectedImages, setSelectedImages] = useState([])
   const [toUpload, setToUpload] = useState([])
   const [orderList, setOrderList] = useState([])
+  const [showNotify, setShowNotify] = useState(false);
+  const toggleShowNotify = () => setShowNotify(!showNotify);
+
 
   const handleUpload = async () => {
+    toggleShowNotify()
     var count = 0;
     orderList.slice(0, orderList.length - 1).forEach(o => {
       const formData = new FormData()
@@ -49,7 +53,7 @@ const Display = (props) => {
         axios.put(url, { order: count++ }, config)
       }
     })
-
+    setShowNotify(false);
   }
 
   useEffect(() => {
@@ -107,16 +111,15 @@ const Display = (props) => {
     }
   }, [selectedImages, toUpload])
 
-
   return (
     <>
       <ListManager
         items={orderList}
         direction="horizontal"
-        maxItems={window.innerWidth > 600 ? 4 : 1}
+        maxItems={window.innerWidth > 600 ? 5 : 1}
         render={item => {
           return item.id !== -2 ?
-            <ImageGalleryPreview key={item.order + item.id} image={item} selectedImages={selectedImages} setSelectedImages={setSelectedImages} toUpload={toUpload} setToUpload={setToUpload} />
+            <ImageGalleryPreview number={orderList.indexOf(item)} key={item.order + item.id} image={item} selectedImages={selectedImages} setSelectedImages={setSelectedImages} toUpload={toUpload} setToUpload={setToUpload} />
             : <ImageGalleryUpload setToUpload={setToUpload} toUpload={toUpload} />
         }}
         onDragEnd={reorderList}
@@ -124,6 +127,18 @@ const Display = (props) => {
       <Row className="px-3">
         <Button onClick={handleUpload}>UPDATE GALLERY</Button>
       </Row>
+
+      <Toast style={{position: 'fixed', top: 60, right: 60}} show={showNotify} onClose={toggleShowNotify}>
+          <Toast.Header>
+            <img
+              src="holder.js/20x20?text=%20"
+              className="rounded me-2"
+              alt=""
+            />
+            <strong className="me-auto">Loading</strong>
+          </Toast.Header>
+          <Toast.Body>Updating gallery, please wait</Toast.Body>
+        </Toast>
     </>
   )
 }

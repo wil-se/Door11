@@ -2,6 +2,7 @@ import React from 'react'
 import { Row, Col, Button, Card, Modal } from 'react-bootstrap'
 import { fetchWrapper, authHeader } from '_helpers'
 import { useState } from 'react';
+import Dropdown from 'react-bootstrap/Dropdown';
 
 
 export function ImageGalleryPreview(props) {
@@ -23,15 +24,23 @@ export function ImageGalleryPreview(props) {
   }
   const url = props.image.image.file ? props.image.image.file : URL.createObjectURL(props.image.image)
 
+  let number = props.number;
+  ++number
   return (
     <>
-      <Card style={{ height: 250, width: 186 }} className="mb-3 mx-2">
+      <Card style={{ height: 400, width: 200 }} className="mb-3 mx-2">
         <Card.Header className='text-center'>
-          <b>{props.image.image.name.slice(0, 16)}</b>
+          <div className='text-center'>
+            <b>{number}</b>
+          </div>
+          <hr/>
+          <div className='text-center'>
+          {props.image.image.name.slice(0, 16)}
+          </div>
         </Card.Header>
         <Card.Body className='p-0'>
           <img
-            alt="not found"
+            alt="↻ loading ↻"
             width={'100%'}
             height={'100%'}
             src={url}
@@ -40,7 +49,7 @@ export function ImageGalleryPreview(props) {
           />
         </Card.Body>
         <Card.Footer className='text-center'>
-          <Button className='removebutton' onClick={handleRemove}>Remove</Button>
+          <Button className='removebutton' onClick={handleRemove}>🗑</Button>
         </Card.Footer>
       </Card>
       <Modal

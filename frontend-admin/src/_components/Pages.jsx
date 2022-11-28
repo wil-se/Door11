@@ -3,7 +3,12 @@ import Pagination from 'react-bootstrap/Pagination';
 
 export default function Pages(props) {
     let pages = []
-    for(let i=1; i<=props.total; i++) {
+    let total = 11
+    let initial = (props.current - Math.ceil(total/2))
+    if (initial <=   0)
+      initial = 1
+
+    for(let i=initial; i<=initial+total; i++) {
         if (i === props.current) {
             pages.push(<Pagination.Item onClick={e => props.setCurrentPage(i)} key={i} active>{i}</Pagination.Item>)
         } else {

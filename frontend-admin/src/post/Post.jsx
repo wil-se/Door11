@@ -309,6 +309,7 @@ function Post(props) {
                       defaultValue={formYear}
                       onChange={(e) => setFormYear(e.target.value)}
                       min={1990}
+                      max={6969}
                     />
                   </Form.Group>
                 </Col>
@@ -363,70 +364,6 @@ function Post(props) {
                     </Form.Select>
                   </Form.Group>
                 </Col>
-                <Col xs={12}>
-                  <Form.Group className="mb-3" controlId="formBasicEmail">
-                    <Form.Label>Content</Form.Label>
-                    <ReactQuill
-                      theme="snow"
-                      value={value}
-                      onChange={setValue}
-                      modules={Post.modules}
-                      formats={Post.formats}
-                    />
-                  </Form.Group>
-                </Col>
-                <Col xs={12}>
-                  <label className='form-label'>Galleries</label>
-                  <Tab.Container id="left-tabs-example" defaultActiveKey="looks">
-                    <Row>
-                      <Col sm={3}>
-                        <Nav variant="pills" className="flex-column">
-                          <Nav.Item>
-                            <Nav.Link eventKey="looks">Looks</Nav.Link>
-                          </Nav.Item>
-                          <Nav.Item>
-                            <Nav.Link eventKey="closeups">Close-Ups</Nav.Link>
-                          </Nav.Item>
-                          <Nav.Item>
-                            <Nav.Link eventKey="vibes">Vibes</Nav.Link>
-                          </Nav.Item>
-                          <Nav.Item>
-                            <Nav.Link eventKey="backstage">Backstage</Nav.Link>
-                          </Nav.Item>
-                          <Nav.Item>
-                            <Nav.Link eventKey="firstlooks">First Looks</Nav.Link>
-                          </Nav.Item>
-                          <Nav.Item>
-                            <Nav.Link eventKey="people">People</Nav.Link>
-                          </Nav.Item>
-                        </Nav>
-                      </Col>
-                      <Col sm={9}>
-                        <Tab.Content>
-                          <Tab.Pane eventKey="looks">
-                            <Display gallery={looks} type={'Looks'} />
-                          </Tab.Pane>
-                          <Tab.Pane eventKey="closeups">
-                            <Display gallery={closeUps} type={'Close-Ups'} />
-                          </Tab.Pane>
-                          <Tab.Pane eventKey="vibes">
-                            <Display gallery={vibes} type={'Vibes'} />
-                          </Tab.Pane>
-                          <Tab.Pane eventKey="backstage">
-                            <Display gallery={backstage} type={'Backstage'} />
-                          </Tab.Pane>
-                          <Tab.Pane eventKey="firstlooks">
-                            <Display gallery={firstLooks} type={'First Looks'} />
-                          </Tab.Pane>
-                          <Tab.Pane eventKey="people">
-                            <Display gallery={people} type={'People'} />
-                          </Tab.Pane>
-
-                        </Tab.Content>
-                      </Col>
-                    </Row>
-                  </Tab.Container>
-                </Col>
               </Row>
             </Col>
             <Col xs={12} md={2}>
@@ -450,6 +387,72 @@ function Post(props) {
                   ))}
                 </Form.Select>
               </Form.Group>
+            </Col>
+          </Row>
+          <Row>
+            <Col xs={12}>
+              <Form.Group className="mb-3" controlId="formBasicEmail">
+                <Form.Label>Content</Form.Label>
+                <ReactQuill
+                  theme="snow"
+                  value={value}
+                  onChange={setValue}
+                  modules={Post.modules}
+                  formats={Post.formats}
+                />
+              </Form.Group>
+            </Col>
+            <Col xs={12} className='mb-5'>
+              <label className='form-label'>Galleries</label>
+              <Tab.Container id="left-tabs-example" defaultActiveKey="looks">
+                <Row>
+                  <Col sm={2}>
+                    <Nav variant="pills" className="flex-column">
+                      <Nav.Item>
+                        <Nav.Link eventKey="looks">Looks</Nav.Link>
+                      </Nav.Item>
+                      <Nav.Item>
+                        <Nav.Link eventKey="closeups">Close-Ups</Nav.Link>
+                      </Nav.Item>
+                      <Nav.Item>
+                        <Nav.Link eventKey="vibes">Vibes</Nav.Link>
+                      </Nav.Item>
+                      <Nav.Item>
+                        <Nav.Link eventKey="backstage">Backstage</Nav.Link>
+                      </Nav.Item>
+                      <Nav.Item>
+                        <Nav.Link eventKey="firstlooks">First Looks</Nav.Link>
+                      </Nav.Item>
+                      <Nav.Item>
+                        <Nav.Link eventKey="people">People</Nav.Link>
+                      </Nav.Item>
+                    </Nav>
+                  </Col>
+                  <Col sm={10}>
+                    <Tab.Content>
+                      <Tab.Pane eventKey="looks">
+                        <Display gallery={looks} type={'Looks'} />
+                      </Tab.Pane>
+                      <Tab.Pane eventKey="closeups">
+                        <Display gallery={closeUps} type={'Close-Ups'} />
+                      </Tab.Pane>
+                      <Tab.Pane eventKey="vibes">
+                        <Display gallery={vibes} type={'Vibes'} />
+                      </Tab.Pane>
+                      <Tab.Pane eventKey="backstage">
+                        <Display gallery={backstage} type={'Backstage'} />
+                      </Tab.Pane>
+                      <Tab.Pane eventKey="firstlooks">
+                        <Display gallery={firstLooks} type={'First Looks'} />
+                      </Tab.Pane>
+                      <Tab.Pane eventKey="people">
+                        <Display gallery={people} type={'People'} />
+                      </Tab.Pane>
+
+                    </Tab.Content>
+                  </Col>
+                </Row>
+              </Tab.Container>
             </Col>
           </Row>
           <Row>

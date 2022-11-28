@@ -30,7 +30,7 @@ a {
 }
 
 .multiple-select {
-    height: 220px !important;
+    height: 320px !important;
 }
 
 .navbar-text {
@@ -65,4 +65,8 @@ a {
 
 .removebutton {
     padding: 2px 8px !important;
+}
+
+hr {
+    margin: 4px 0px !important;
 }
