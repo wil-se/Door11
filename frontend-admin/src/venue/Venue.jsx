@@ -15,7 +15,6 @@ function Venue(props) {
   const [name, setName]= useState(undefined)
   const [address, setAddress] = useState(undefined)
   const [subvenue, setSubVenue] = useState(undefined)
-  const [toBeAnnounced, setToBeAnnounced] = useState(false)
   const [city, setCity] = useState('')
   const [cities, setCities] = useState([])
 
@@ -27,7 +26,6 @@ function Venue(props) {
     setName(venue.name)
     setAddress(venue.address)
     setSubVenue(venue.subvenue)
-    setToBeAnnounced(venue.to_be_announced)
     setCity(venue.city)
   }
 
@@ -46,7 +44,6 @@ function Venue(props) {
       name: name,
       address: address,
       subvenue: subvenue,
-      to_be_announced: toBeAnnounced,
       city: city
     }
     props.blank ?
@@ -102,18 +99,6 @@ function Venue(props) {
                   placeholder="Enter title"
                   defaultValue={subvenue}
                   onChange={(e) => setSubVenue(e.target.value)}
-                />
-              </Form.Group>
-            </Col>
-            <Col xs={12} md={3} className=''>
-              <Form.Group className="mb-3" controlId="formBasicEmail">
-                {/* <Form.Label>To be announced</Form.Label> */}
-                <Form.Check
-                  type={'checkbox'}
-                  id={`formBasicEmail`}
-                  label={`to be announced`}
-                  defaultChecked={toBeAnnounced}
-                  onChange={e => setToBeAnnounced(e.target.checked)}
                 />
               </Form.Group>
             </Col>

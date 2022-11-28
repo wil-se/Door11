@@ -71,7 +71,7 @@ class Command(BaseCommand):
             article.title = f'{brand.name} {article.season} {article.year}'
             article.save()
             collection = Collection()
-            collection.name = f'{brand.name} {article.season} {article.year} {article.season}'
+            collection.name = f'{brand.name} {article.season} {article.year}'
             collection.save()
             article.collection = collection
             collection.save()
@@ -99,7 +99,7 @@ class Command(BaseCommand):
             article.title = f'{brand.name} {article.season} {article.year}'
             article.save()
             collection = random.choice(Collection.objects.all())
-            collection.name = f'{brand.name} {article.season} {article.year} {article.season}'
+            collection.name = f'{brand.name} {article.season} {article.year}'
             collection.save()
             article.collection = collection
             collection.save()

@@ -33,20 +33,20 @@ export function ImageGalleryPreview(props) {
           <div className='text-center'>
             <b>{number}</b>
           </div>
-          <hr/>
+          <hr />
           <div className='text-center'>
-          {props.image.image.name.slice(0, 16)}
+            {props.image.image.name}
           </div>
         </Card.Header>
-        <Card.Body className='p-0'>
-          <img
-            alt="↻ loading ↻"
-            width={'100%'}
-            height={'100%'}
-            src={url}
-            onClick={() => setModalShow(true)}
-            style={{objectFit: 'cover'}}
-          />
+        <Card.Body className='p-0 text-center d-flex align-items-center justify-content-center'>
+            <img
+              alt="↻ loading ↻"
+              width={'150px'}
+              height={'150px'}
+              src={url}
+              onClick={() => setModalShow(true)}
+              style={{ objectFit: 'contain' }}
+            />
         </Card.Body>
         <Card.Footer className='text-center'>
           <Button className='removebutton' onClick={handleRemove}>🗑</Button>

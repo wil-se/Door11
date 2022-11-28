@@ -26,6 +26,8 @@ class Post(models.Model):
     city = models.ForeignKey('backend.City', null=True, on_delete=models.SET_NULL)
     event_set = models.ForeignKey('backend.EventSet', null=True, on_delete=models.SET_NULL)
     gallery = models.ForeignKey('backend.Gallery', null=True, on_delete=models.SET_NULL)
+    to_be_announced = models.BooleanField(default=True)
+
 
     def __str__(self):
         return self.title
@@ -61,7 +63,6 @@ class Season(models.Model):
 
 class Venue(models.Model):
     city = models.ForeignKey('backend.City', null=True, on_delete=models.SET_NULL)
-    to_be_announced = models.BooleanField(default=True)
     name = models.CharField(max_length=128, default='')
     subvenue = models.CharField(max_length=128, default='')
     address = models.CharField(max_length=128, default='')

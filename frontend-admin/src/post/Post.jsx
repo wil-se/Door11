@@ -71,17 +71,19 @@ function Post(props) {
   const [formBrands, setFormBrands] = useState([])
   const [formCollection, setFormCollection] = useState(-1)
   const [formSeason, setFormSeason] = useState(-1)
-  const [formYear, setFormYear] = useState(new Date().getFullYear())
+  const [formYear, setFormYear] = useState(undefined)
   const [formVenue, setFormVenue] = useState(-1)
   const [formCity, setFormCity] = useState(-1)
   const [formEventSet, setFormEventSet] = useState(-1)
+  const [formToBeAnnounced, setFormToBeAnnounced] = useState(false)
+
+  const [brandNames, setBrandNames] = useState([])
 
   const fetchPost = async () => {
     let post
     post = await fetchWrapper.get(
       `${process.env.REACT_APP_API_URL}/backend/post/?id=${id}`,
     )
-    console.log(post)
     setPost(post)
     setValue(post.content)
     setFormTitle(post.title)
@@ -95,11 +97,11 @@ function Post(props) {
     setFormStatus(post.status)
     post.event_set && setFormEventSet(post.event_set)
     post.city && setFormCity(post.city)
+    setFormToBeAnnounced(post.to_be_announced)
     // console.log(post.gallery)
 
     var tgall = structuredClone(post.gallery)
     tgall.images = []
-    console.log("tgall", tgall)
 
     let types = {
       'Looks': structuredClone(tgall),
@@ -161,6 +163,33 @@ function Post(props) {
     setEventSets(eventSets)
   }
 
+  const getBrandName = (brandID) => {
+    console.log(brandID)
+    for (let i = 0; i < brands.length; i++) {
+      if (parseInt(brands[i].id) === parseInt(brandID)) {
+        console.log('match', brands[i].name)
+        return brands[i].name
+      }
+    }
+  }
+
+  const getCollectionName = (collectionID) => {
+    console.log(collectionID)
+    for (let i = 0; i < collections.length; i++) {
+      if (parseInt(collections[i].id) === parseInt(collectionID)) {
+        console.log('match', collections[i].name)
+        return collections[i].name
+      }
+    }
+  }
+
+  const generateTitle = async () => {
+    var brandTitleList = formBrands.map(b => getBrandName(b))
+    var coll = getCollectionName(formCollection)
+    console.log(formYear)
+    setFormTitle(`${brandTitleList.join(' x ')} ${coll ? coll + ' ' : ''}${formYear}`)
+  }
+
   useEffect(() => {
     // dispatch(postActions.getAll());
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -171,6 +200,7 @@ function Post(props) {
     fetchVenue()
     fetchCities()
     fetchEventSets()
+
     // eslint-disable-next-line
   }, [])
 
@@ -184,13 +214,13 @@ function Post(props) {
       brand: formBrands,
       year: parseInt(formYear),
       content: value,
+      to_be_announced: formToBeAnnounced
     }
     if (formCity >= 0) data.city = formCity
     if (formCollection >= 0) data.collection = formCollection
     if (formVenue >= 0) data.venue = formVenue
     if (formSeason >= 0) data.season = formSeason
     if (formEventSet >= 0) data.event_set = formEventSet
-
     console.log(data)
     props.blank
       ? (await fetchWrapper.post(
@@ -217,7 +247,7 @@ function Post(props) {
           <Row>
             <Col xs={12} md={10}>
               <Row>
-                <Col xs={12} md={12}>
+                <Col xs={12} md={11}>
                   <Form.Group className="mb-3" controlId="formBasicEmail">
                     <Form.Label>Title</Form.Label>
                     <Form.Control
@@ -227,6 +257,9 @@ function Post(props) {
                       onChange={(e) => setFormTitle(e.target.value)}
                     />
                   </Form.Group>
+                </Col>
+                <Col xs={12} md={1} className="d-flex align-items-center justify-content-end">
+                  <Button onClick={() => { generateTitle() }} className='mt-2 p-1 pt-0'>Generate</Button>
                 </Col>
                 <Col xs={12} md={3}>
                   <Form.Group className="mb-3">
@@ -364,6 +397,18 @@ function Post(props) {
                     </Form.Select>
                   </Form.Group>
                 </Col>
+                <Col xs={12} md={3} className='d-flex align-items-center'>
+                  <Form.Group className="" controlId="formBasicEmail">
+                    {/* <Form.Label>To be announced</Form.Label> */}
+                    <Form.Check
+                      type={'checkbox'}
+                      id={`formBasicEmail`}
+                      label={`to be announced`}
+                      checked={formToBeAnnounced}
+                      onChange={e => setFormToBeAnnounced(e.target.checked)}
+                    />
+                  </Form.Group>
+                </Col>
               </Row>
             </Col>
             <Col xs={12} md={2}>
@@ -373,10 +418,11 @@ function Post(props) {
                   className="multiple-select"
                   multiple
                   value={formBrands}
-                  onChange={(e) =>
+                  onChange={(e) => {
                     setFormBrands(
                       Array.from(e.target.selectedOptions).map((v) => v.value),
-                    )
+                    );
+                  }
                   }
                   id="disabledSelect"
                 >
