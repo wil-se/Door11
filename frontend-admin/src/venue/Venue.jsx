@@ -14,7 +14,7 @@ function Venue(props) {
   const [name, setName]= useState(undefined)
   const [address, setAddress] = useState(undefined)
   const [subvenue, setSubVenue] = useState(undefined)
-  const [city, setCity] = useState('')
+  const [city, setCity] = useState(0)
   const [cities, setCities] = useState([])
 
   const fetchVenue = async () => {
@@ -30,12 +30,13 @@ function Venue(props) {
   const fetchCities = async () => {
     let cities = await fetchWrapper.get(`${process.env.REACT_APP_API_URL}/backend/city/?no_page`)
     setCities(cities)
+    setCity(cities[0].id)
   }
 
   useEffect(() => {
     !props.blank && fetchVenue()
     fetchCities()
-  })
+  }, [])
 
   const handleSubmit = async () => {
     let data = {
@@ -44,6 +45,7 @@ function Venue(props) {
       subvenue: subvenue,
       city: city
     }
+    console.log(data)
     props.blank ?
     await fetchWrapper.post(`${process.env.REACT_APP_API_URL}/backend/venue/`, data) && navigate(-1)
     : await fetchWrapper.put(`${process.env.REACT_APP_API_URL}/backend/venue/?id=${id}`, data) && navigate(-1)
