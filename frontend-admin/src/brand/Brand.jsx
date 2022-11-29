@@ -22,7 +22,8 @@ function Brand(props) {
 
   useEffect(() => {
     !props.blank && fetchBrand()
-  })
+  // eslint-disable-next-line
+  }, [])
 
   const handleSubmit = async () => {
     let data = {

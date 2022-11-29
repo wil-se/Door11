@@ -36,6 +36,7 @@ function Venue(props) {
   useEffect(() => {
     !props.blank && fetchVenue()
     fetchCities()
+    // eslint-disable-next-line
   }, [])
 
   const handleSubmit = async () => {

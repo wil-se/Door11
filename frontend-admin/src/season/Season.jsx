@@ -21,7 +21,8 @@ function Season(props) {
 
   useEffect(() => {
     !props.blank && fetchSeason()
-  })
+  // eslint-disable-next-line
+  }, [])
 
   const handleSubmit = async () => {
     let data = {

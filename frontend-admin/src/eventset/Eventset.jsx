@@ -41,7 +41,8 @@ function Eventset(props) {
   useEffect(() => {
     !props.blank && fetchEventSet()
     fetchCities()
-  })
+  // eslint-disable-next-line
+  }, [])
 
   const handleSubmit = async () => {
     let data = {

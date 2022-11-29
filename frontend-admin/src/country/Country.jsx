@@ -22,7 +22,8 @@ function Country(props) {
 
   useEffect(() => {
     !props.blank && fetchCountry()
-  })
+  // eslint-disable-next-line
+  }, [])
 
   const handleSubmit = async () => {
     let data = {

@@ -15,7 +15,6 @@ function Venues() {
         const baseUrl = `${process.env.REACT_APP_API_URL}`;
         let posts = await fetchWrapper.get(`${baseUrl}/backend/venue/?page=${currentPage}`);
         setPosts(posts)
-        console.log(posts)
     }
 
     useEffect(() => {

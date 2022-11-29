@@ -23,7 +23,8 @@ function Collection(props) {
 
   useEffect(() => {
     !props.blank && fetchCollection()
-  })
+  // eslint-disable-next-line
+  }, [])
 
   const handleSubmit = async () => {
     let data = {

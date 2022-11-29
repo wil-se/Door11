@@ -38,7 +38,8 @@ function City(props) {
   useEffect(() => {
     !props.blank && fetchCity()
     fetchCountries()
-  })
+  // eslint-disable-next-line
+  }, [])
 
   const handleSubmit = async () => {
     let data = {
