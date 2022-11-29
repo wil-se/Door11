@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-$8e82)-=3bl)$&rs(el!5e21#fjk+d-eqr(ps6&o_87m+7!ud)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'https://door11.netlify.app']
+ALLOWED_HOSTS = ['127.0.0.1', 'https://door11.netlify.app', 'door11.netlify.app', '54.36.99.216']
 
 
 # Application definition
@@ -147,7 +147,7 @@ SIMPLE_JWT = {
 
 CORS_ALLOWED_ORIGINS = [
     'http://127.0.0.1:3000',
-    'https://door11.netlify.app'
+    'https://door11.netlify.app',
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True # If this is used then `CORS_ALLOWED_ORIGINS` will not have any effect

@@ -74,6 +74,7 @@ const Display = (props) => {
             'content-type': 'multipart/form-data',
             Authorization: auth['Authorization'],
           },
+          withCredentials: false,
         }
         console.log("form data", formData)
         axios.post(url, formData, config)
