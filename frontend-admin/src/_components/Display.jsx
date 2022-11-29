@@ -75,7 +75,7 @@ const Display = (props) => {
             Authorization: auth['Authorization'],
           },
         }
-        console.log(formData)
+        console.log("form data", formData)
         axios.post(url, formData, config)
       } else {
         const url = `${process.env.REACT_APP_API_URL}/backend/image/?gallery=${props.gallery.id}&id=${o.image.id}`
