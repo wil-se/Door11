@@ -56,6 +56,8 @@ const Display = (props) => {
     orderList.slice(0, orderList.length - 1).forEach(o => {
       const formData = new FormData()
       if (o.id === -1) {
+        console.log(o)
+        console.log(toUpload)
         const url = `${process.env.REACT_APP_API_URL}/backend/image/?gallery=${props.gallery.id}`
         let file;
         toUpload.forEach(f => {
@@ -90,6 +92,7 @@ const Display = (props) => {
       }
     })
     setShowNotify(false);
+    setToUpload([])
   }
 
   useEffect(() => {
