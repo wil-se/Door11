@@ -5,7 +5,6 @@ import { useState } from 'react';
 
 
 export function ImageGalleryPreview(props) {
-  // console.log("pp", props)
   const [modalShow, setModalShow] = useState(false);
 
   const handleRemove = async () => {

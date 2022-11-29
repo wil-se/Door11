@@ -24,7 +24,6 @@ function Eventset(props) {
 
   const fetchEventSet = async () => {
     let eventSet = await fetchWrapper.get(`${process.env.REACT_APP_API_URL}/backend/eventset/?id=${id}`)
-    console.log(eventSet)
     setName(eventSet.name)
     setCity(eventSet.city)
     setStartDate(new Date(eventSet.start_date))
@@ -52,7 +51,6 @@ function Eventset(props) {
     }
     if (city >= 0)
       data.city = city
-    console.log(data)
     props.blank ?
     await fetchWrapper.post(`${process.env.REACT_APP_API_URL}/backend/eventset/`, data) && navigate(-1)
     : await fetchWrapper.put(`${process.env.REACT_APP_API_URL}/backend/eventset/?id=${id}`, data) && navigate(-1)

@@ -92,7 +92,6 @@ function Post(props) {
     post.event_set && setFormEventSet(post.event_set)
     post.city && setFormCity(post.city)
     setFormToBeAnnounced(post.to_be_announced)
-    // console.log(post.gallery)
 
     var tgall = structuredClone(post.gallery)
     tgall.images = []
@@ -156,20 +155,16 @@ function Post(props) {
   }
 
   const getBrandName = (brandID) => {
-    console.log(brandID)
     for (let i = 0; i < brands.length; i++) {
       if (parseInt(brands[i].id) === parseInt(brandID)) {
-        console.log('match', brands[i].name)
         return brands[i].name
       }
     }
   }
 
   const getCollectionName = (collectionID) => {
-    console.log(collectionID)
     for (let i = 0; i < collections.length; i++) {
       if (parseInt(collections[i].id) === parseInt(collectionID)) {
-        console.log('match', collections[i].name)
         return collections[i].name
       }
     }
@@ -178,7 +173,6 @@ function Post(props) {
   const generateTitle = async () => {
     var brandTitleList = formBrands.map(b => getBrandName(b))
     var coll = getCollectionName(formCollection)
-    console.log(formYear)
     setFormTitle(`${brandTitleList.join(' x ')} ${coll ? coll + ' ' : ''}${formYear}`)
   }
 
@@ -213,7 +207,6 @@ function Post(props) {
     if (formVenue >= 0) data.venue = formVenue
     if (formSeason >= 0) data.season = formSeason
     if (formEventSet >= 0) data.event_set = formEventSet
-    console.log(data)
     props.blank
       ? (await fetchWrapper.post(
         `${process.env.REACT_APP_API_URL}/backend/post/`,

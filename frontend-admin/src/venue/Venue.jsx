@@ -46,7 +46,6 @@ function Venue(props) {
       subvenue: subvenue,
       city: city
     }
-    console.log(data)
     props.blank ?
     await fetchWrapper.post(`${process.env.REACT_APP_API_URL}/backend/venue/`, data) && navigate(-1)
     : await fetchWrapper.put(`${process.env.REACT_APP_API_URL}/backend/venue/?id=${id}`, data) && navigate(-1)

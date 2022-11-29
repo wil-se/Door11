@@ -19,7 +19,6 @@ const Display = (props) => {
     l = l.slice(0, l.length - 1).sort((a, b) => { return a.name.localeCompare(b.name) })
     l.forEach((e, index) => e.order = index)
     l = l.concat({ id: -2, order: l.length, index: 0 })
-    console.log("L", l)
     setOrderList(l)
   }
 
@@ -28,16 +27,14 @@ const Display = (props) => {
     l = l.slice(0, l.length - 1).sort((a, b) => { return b.name.localeCompare(a.name) })
     l.forEach((e, index) => e.order = index)
     l = l.concat({ id: -2, order: l.length, index: 0 })
-    console.log("L", l)
     setOrderList(l)
   }
 
   const handleSortTimeAscending = () => {
     let l = orderList
-    l = l.slice(0, l.length - 1).sort((a, b) => { console.log(a.last_modified_date); return new Date(a.last_modified_date).getTime() - new Date(b.last_modified_date).getTime() })
+    l = l.slice(0, l.length - 1).sort((a, b) => { return new Date(a.last_modified_date).getTime() - new Date(b.last_modified_date).getTime() })
     l.forEach((e, index) => e.order = index)
     l = l.concat({ id: -2, order: l.length, index: 0 })
-    console.log("L", l)
     setOrderList(l)
   }
 
@@ -46,7 +43,6 @@ const Display = (props) => {
     l = l.slice(0, l.length - 1).sort((a, b) => { return new Date(b.last_modified_date).getTime() - new Date(a.last_modified_date).getTime() })
     l.forEach((e, index) => e.order = index)
     l = l.concat({ id: -2, order: l.length, index: 0 })
-    console.log("L", l)
     setOrderList(l)
   }
 
@@ -56,8 +52,6 @@ const Display = (props) => {
     orderList.slice(0, orderList.length - 1).forEach(o => {
       const formData = new FormData()
       if (o.id === -1) {
-        console.log(o)
-        console.log(toUpload)
         const url = `${process.env.REACT_APP_API_URL}/backend/image/?gallery=${props.gallery.id}`
         let file;
         toUpload.forEach(f => {
@@ -77,7 +71,6 @@ const Display = (props) => {
             Authorization: auth['Authorization'],
           },
         }
-        console.log("form data", formData)
         axios.post(url, formData, config)
       } else {
         const url = `${process.env.REACT_APP_API_URL}/backend/image/?gallery=${props.gallery.id}&id=${o.image.id}`
@@ -124,7 +117,6 @@ const Display = (props) => {
   }
 
   function sortList(list) {
-    console.log("sorting..")
     let l = list.slice().sort((first, second) => {
       if (second.id === -2)
         return -1
@@ -132,11 +124,8 @@ const Display = (props) => {
         return 1
       return first.order - second.order
     });
-    console.log("sorting", l)
     return l;
   }
-
-  console.log("orderList", orderList)
 
   useEffect(() => {
     if (selectedImages) {
@@ -154,7 +143,6 @@ const Display = (props) => {
         uol.push({ last_modified_date: i.lastModifiedDate, id: -1, order: count++, name: i.name, image: { id: 0, name: i.name, type: 'Looks', file: URL.createObjectURL(i) }, index: index });
       })
       let final = sol.concat(uol).concat({ id: -2, order: count, index: 0 })
-      console.log("final", final)
       setOrderList(final)
     }
   }, [selectedImages, toUpload])
